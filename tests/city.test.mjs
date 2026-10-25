@@ -1,7 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {SEOUL_AREAS,inPolygon} from '../atlas-data.mjs?v=5';
-import {signalState,stepTraffic,purchaseItem} from '../city-sim.mjs?v=5';
-import {blockedAt,lineBlocked,routeLength} from '../core.mjs?v=5';
+import {SEOUL_AREAS,inPolygon} from '../atlas-data.mjs?v=6';
+import {signalState,stepTraffic,purchaseItem} from '../city-sim.mjs?v=6';
+import {blockedAt,lineBlocked,routeLength} from '../core.mjs?v=6';
 test('25 real-source municipal boundary polygons have finite geometry and unique names',()=>{assert.equal(SEOUL_AREAS.length,25);assert.equal(new Set(SEOUL_AREAS.map(a=>a.name)).size,25);for(const a of SEOUL_AREAS)assert(a.points.length>3&&a.points.every(p=>p.every(Number.isFinite)));assert(inPolygon(1,1,[[0,0],[2,0],[2,2],[0,2]]))});
 test('east-west and north-south traffic never both get green',()=>{for(let time=0;time<200;time+=.2)assert(!(signalState(time,'EW')==='green'&&signalState(time,'NS')==='green'));assert.equal(signalState(10.5,'EW'),'amber');assert.equal(signalState(13,'EW'),'red')});
 test('cars stop at red before entering the intersection',()=>{const route=[{x:0,z:0},{x:100,z:0},{x:100,z:100},{x:0,z:100},{x:0,z:0}],v={traffic:true,roadRoute:route,roadKey:'test',trafficOffset:80,speed:12};for(let i=0;i<100;i++)stepTraffic([v],.02,13);assert(v.trafficOffset<=86.01);assert(v.speed<2);for(let i=0;i<200;i++)stepTraffic([v],.02,2);assert(v.trafficOffset>90)});

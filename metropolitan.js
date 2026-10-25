@@ -1,6 +1,6 @@
-import {SEOUL_AREAS,AIRPORTS} from './atlas-data.mjs?v=5';
-import {BRIDGES,HILLS,groundHeight,blockedAt,sampleRoute} from './core.mjs?v=5';
-import {signalState} from './city-sim.mjs?v=5';
+import {SEOUL_AREAS,AIRPORTS} from './atlas-data.mjs?v=6';
+import {BRIDGES,HILLS,groundHeight,blockedAt,sampleRoute} from './core.mjs?v=6';
+import {signalState} from './city-sim.mjs?v=6';
 export function buildMetropolitan(T,scene,world){
  const {m}=world,chunks=new Map(),facilities=[],signals=[],parks=[],anchors=[],ambientPlanes=[];let buildings=0,seed=63026;
  const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
@@ -22,7 +22,7 @@ export function buildMetropolitan(T,scene,world){
  for(const x of [-240,0,240])for(const sign of [-1,1])part(18,.07,1600,x,.03,sign*1220,m.road);
  function reserved(x,z){return Math.abs(x)<455&&Math.abs(z)<455||Math.abs(z)<100||groundHeight(x,z)>2||AIRPORTS.some(a=>Math.abs(x-a.x)<230&&Math.abs(z-a.z)<260)||Math.abs(x+2100)<180&&Math.abs(z+750)<210}
  // A deterministic district-wide mix of apartments, offices and street retail.
- for(let x=-2300;x<=2300;x+=70)for(let z=-1900;z<=1900;z+=70){if(reserved(x,z)||roadAxes.some(a=>Math.abs(x-a)<30)||[-1800,-1400,-1000,-600,600,1000,1400,1800,-340,-240,-140,140,240,340].some(a=>Math.abs(z-a)<30)||[-240,0,240].some(a=>Math.abs(x-a)<25))continue;const h=8+Math.floor(random()*10)*4;building(null,x,z,20+random()*14,18+random()*13,h,random()>.55?m.white:m.concrete)}
+ for(let x=-2300;x<=2300;x+=56)for(let z=-1900;z<=1900;z+=56){if(reserved(x,z)||roadAxes.some(a=>Math.abs(x-a)<30)||[-1800,-1400,-1000,-600,600,1000,1400,1800,-340,-240,-140,140,240,340].some(a=>Math.abs(z-a)<30)||[-240,0,240].some(a=>Math.abs(x-a)<25))continue;const h=8+Math.floor(random()*10)*4;building(null,x,z,20+random()*14,18+random()*13,h,random()>.55?m.white:m.concrete)}
  function nearestRoad(n){return [-2200,-1800,-1400,-1000,-600,-240,240,600,1000,1400,1800,2200].reduce((best,v)=>Math.abs(v-n)<Math.abs(best-n)?v:best,600)}
  function onRoad(x,z,r=12){return [...roadAxes,-240,0,240].some(a=>Math.abs(x-a)<12+r)||[-1800,-1400,-1000,-600,-340,-240,-140,140,240,340,600,1000,1400,1800].some(a=>Math.abs(z-a)<12+r)}
  function store(area,index){let x=nearestRoad(area.x)+34,z=area.z;if(Math.abs(z)<110)z=area.z<0?-115:115;if(Math.abs(x)<460&&Math.abs(z)<460){x=area.x<0?-480:480;z=-110-index%3*35}for(let tries=0;tries<30&&(blockedAt(x,z,8,world.blocks)||groundHeight(x,z)>1||onRoad(x,z,9));tries++)z+=24;if(Math.abs(z)>2400)z=120;
@@ -32,9 +32,9 @@ export function buildMetropolitan(T,scene,world){
  }
  SEOUL_AREAS.forEach(store);
  // Han River parks: promenades, lawns, sport courts, picnic tables and walking citizens.
- for(const [i,x]of [-1500,-900,-450,450,900,1500].entries()){const z=i%2?95:-95;parks.push({name:['난지','망원','여의도','반포','뚝섬','잠실'][i]+' 한강공원',x,z});part(170,.08,65,x,.05,z,m.green);part(130,.08,4,x,.12,z,m.sand);part(24,.09,18,x+52,.15,z,m.blue);for(let k=-3;k<=3;k++){part(3,.2,1,x+k*15,.8,z+16,m.wood||m.sand);part(3,.15,1,x+k*15,1.1,z+16.4,m.dark)}world.label(parks[i].name,x,5,z,'#b5e5a5',27);for(let k=0;k<8;k++){const p=world.person(x-65+k*17,z+8,false,i+k);p.park=true}}
+ for(const [i,x]of [-1500,-900,-450,450,900,1500].entries()){const z=i%2?95:-95;parks.push({name:['난지','망원','여의도','반포','뚝섬','잠실'][i]+' 한강공원',x,z});part(170,.08,65,x,.05,z,m.green);part(130,.08,4,x,.12,z,m.sand);part(24,.09,18,x+52,.15,z,m.blue);for(let k=-3;k<=3;k++){part(3,.2,1,x+k*15,.8,z+16,m.wood||m.sand);part(3,.15,1,x+k*15,1.1,z+16.4,m.dark)}world.label(parks[i].name,x,5,z,'#b5e5a5',27);for(let k=0;k<12;k++){const p=world.person(x-70+k*12,z+8,false,i+k);p.park=true}}
  // A few field plazas provide people and usable services throughout the city.
- for(let i=0;i<48;i++){const a=anchors[i%anchors.length],p=world.person(a.x+(i%3-1)*3,a.z-4,false,i);p.cityWalker=true}
+ for(let i=0;i<152;i++){const a=anchors[i%anchors.length],p=world.person(a.x+(i%3-1)*3,a.z-4,false,i);p.cityWalker=true}
  function terminal(airport){const {x,z}=airport;const w=100,d=66;part(w,.15,d,x,.1,z,tile);part(w,.3,d,x,7,z,m.white);part(w,6,.35,x,3,z+d/2,m.glass,true);for(const sx of [-1,1])part(.35,6,d,x+sx*w/2,3,z,m.glass,true);for(const sx of [-1,1])part(42,6,.35,x+sx*29,3,z-d/2,m.glass,true);
   for(let c=-3;c<=3;c++){part(7,1.2,2,x+c*12,.6,z-10,m.blue,true);part(1,.7,.12,x+c*12,1.6,z-10.9,m.black);for(let k=0;k<4;k++)part(1.1,.75,.8,x+c*12+k*1.5-2,.8,z+10,m.blue)}
   part(22,.8,5,x-28,.4,z+22,m.dark,true);part(19,.83,2.5,x-28,.43,z+22,m.metal);part(18,2,.2,x,4.3,z+10,m.dark);part(13,1.8,.2,x+29,3.5,z+24,m.window);world.label(airport.name,x,9,z-32,'#c1e7ff',58);world.label('CHECK-IN · 출발 / 도착',x,4.8,z-8,'#d5edff',26);world.label('GATES 01–04  →',x+24,4.5,z+18,'#daefcf',19);world.label('BAGGAGE · 수하물',x-28,3,z+22,'#f1dfb1',18);
@@ -54,7 +54,7 @@ export function buildMetropolitan(T,scene,world){
  // Airport approach traffic uses the same civilian jet model but remains autonomous.
  for(let i=0;i<2;i++){const root=new T.Group();scene.add(root);const v={root,type:'airliner'};buildAircraft(T,v,true,m);ambientPlanes.push({root,phase:i*Math.PI,airport:AIRPORTS[i]})}
  const matrix=new T.Object3D();for(const chunk of chunks.values())for(const [mat,parts]of chunk.batches){const mesh=new T.InstancedMesh(new T.BoxGeometry(1,1,1),mat,parts.length);parts.forEach((p,i)=>{matrix.position.set(p.x,p.y,p.z);matrix.scale.set(p.w,p.h,p.d);matrix.updateMatrix();mesh.setMatrixAt(i,matrix.matrix)});mesh.computeBoundingSphere();chunk.root.add(mesh)}
- let visibilityTime=0;return {chunks,facilities,parks,anchors,signals,routes,buildings,update(dt,time,player,flying){visibilityTime-=dt;if(visibilityTime<=0){visibilityTime=.35;for(const chunk of chunks.values())chunk.root.visible=chunk.always||Math.hypot(chunk.root.position.x-player.x,chunk.root.position.z-player.z)<(flying?1700:850)}for(const s of signals){s.mesh.material=lampMat[signalState(time,s.axis,s.offset)];s.root.visible=Math.hypot(s.x-player.x,s.z-player.z)<350}for(const p of ambientPlanes){const a=time*.035+p.phase;p.root.position.set(p.airport.x+Math.cos(a)*330,90+Math.sin(a*.5)*25,p.airport.z+Math.sin(a)*400);p.root.rotation.y=-a-Math.PI/2}},safeSpawn(anchor){for(let r=0;r<160;r+=8)for(let i=0;i<16;i++){const x=anchor.x+Math.cos(i*Math.PI/8)*r,z=anchor.z+Math.sin(i*Math.PI/8)*r;if(!blockedAt(x,z,.5,world.blocks)&&groundHeight(x,z)<1)return {x,z}}return {x:220,z:-115}}};
+ let visibilityTime=0;return {chunks,facilities,parks,anchors,signals,routes,buildings,update(dt,time,player,flying,mobile=false){visibilityTime-=dt;if(visibilityTime<=0){visibilityTime=.35;for(const chunk of chunks.values())chunk.root.visible=chunk.always||Math.hypot(chunk.root.position.x-player.x,chunk.root.position.z-player.z)<(mobile?(flying?1000:550):(flying?1700:850))}for(const s of signals){s.mesh.material=lampMat[signalState(time,s.axis,s.offset)];s.root.visible=Math.hypot(s.x-player.x,s.z-player.z)<350}for(const p of ambientPlanes){const a=time*.035+p.phase;p.root.position.set(p.airport.x+Math.cos(a)*330,90+Math.sin(a*.5)*25,p.airport.z+Math.sin(a)*400);p.root.rotation.y=-a-Math.PI/2}},safeSpawn(anchor){for(let r=0;r<160;r+=8)for(let i=0;i<16;i++){const x=anchor.x+Math.cos(i*Math.PI/8)*r,z=anchor.z+Math.sin(i*Math.PI/8)*r;if(!blockedAt(x,z,.5,world.blocks)&&groundHeight(x,z)<1)return {x,z}}return {x:220,z:-115}}};
 }
 export function buildAircraft(T,v,civil,m){
  while(v.root.children.length)v.root.remove(v.root.children[0]);const root=v.root,bodyMat=civil?m.white:m.metal;

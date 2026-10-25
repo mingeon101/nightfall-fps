@@ -1,0 +1,41 @@
+{
+  "nightfallSaves": {
+    "$uid": {
+      ".read": "auth != null && auth.uid === $uid",
+      "slot1": {
+        ".write": "auth != null && auth.uid === $uid && newData.exists()",
+        ".validate": "newData.hasChildren(['schemaVersion','worldVersion','playSeconds','player','selected','inventory','revision','updatedAt'])",
+        "schemaVersion": { ".validate": "newData.val() === 1" },
+        "worldVersion": { ".validate": "newData.val() === 6" },
+        "playSeconds": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000000" },
+        "selected": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 3 && newData.val() % 1 === 0" },
+        "revision": { ".validate": "newData.isNumber() && ((!data.exists() && newData.val() === 1) || (data.exists() && newData.val() === data.val() + 1))" },
+        "updatedAt": { ".validate": "newData.isNumber() && newData.val() <= now" },
+        "player": {
+          ".validate": "newData.hasChildren(['x','z','health','armor','wallet'])",
+          "x": { ".validate": "newData.isNumber() && newData.val() >= -3390 && newData.val() <= 3390" },
+          "z": { ".validate": "newData.isNumber() && newData.val() >= -3390 && newData.val() <= 3390" },
+          "health": { ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 100" },
+          "armor": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100" },
+          "wallet": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000000" },
+          "$other": { ".validate": false }
+        },
+        "inventory": {
+          ".validate": "newData.hasChildren(['0','1','2','3'])",
+          "$index": {
+            ".validate": "($index === '0' || $index === '1' || $index === '2' || $index === '3') && newData.hasChildren(['owned','ammo','reserve'])",
+            "owned": { ".validate": "newData.isBoolean()" },
+            "ammo": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 40" },
+            "reserve": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100000" },
+            "$other": { ".validate": false }
+          }
+        },
+        "defeatedEnemyIds": {
+          "$index": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 15 && newData.val() % 1 === 0" }
+        },
+        "$other": { ".validate": false }
+      },
+      "$other": { ".validate": false }
+    }
+  }
+}

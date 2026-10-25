@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {STATIONS,WEAPONS,VEHICLE_TYPES,groundHeight,districtAt,moveBody,lineBlocked,damageVitals,transitRoute,routeLength,sampleRoute,chooseExit,vehicleStep,BRIDGES,HILLS,blockedAt} from '../core.mjs?v=5';
+import {STATIONS,WEAPONS,VEHICLE_TYPES,groundHeight,districtAt,moveBody,lineBlocked,damageVitals,transitRoute,routeLength,sampleRoute,chooseExit,vehicleStep,BRIDGES,HILLS,blockedAt} from '../core.mjs?v=6';
 
 test('Seoul sectors sit north and south of Hangang',()=>{
  assert.equal(groundHeight(55,-100),32);assert.equal(groundHeight(200,200),0);
