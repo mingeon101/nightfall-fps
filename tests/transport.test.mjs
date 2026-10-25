@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {STATIONS,routeLength} from '../core.mjs';
-import {BUS_ROUTE,BUS_STOPS,createMetroJourney,stepMetro,boardMetro,alightMetro,createBusService,requestBus,stepBus,boardBus,alightBus,busPosition} from '../transport.mjs';
+import {STATIONS,routeLength} from '../core.mjs?v=5';
+import {BUS_ROUTE,BUS_STOPS,createMetroJourney,stepMetro,boardMetro,alightMetro,createBusService,requestBus,stepBus,boardBus,alightBus,busPosition} from '../transport.mjs?v=5';
 function tick(fn,state,seconds,dt=.05){for(let t=0;t<seconds;t+=dt)fn(state,Math.min(dt,seconds-t))}
 test('metro arrives before doors open and only boards through fully open doors',()=>{
  const j=createMetroJourney(STATIONS[0],STATIONS[1],1);assert(j);assert.equal(j.doors,0);assert(!boardMetro(j));tick(stepMetro,j,4);assert(j.arrivingOffset>0);assert.equal(j.phase,'approach');assert.equal(j.doors,0);tick(stepMetro,j,2.2);assert.equal(j.phase,'boarding');assert.equal(j.doors,1);assert(boardMetro(j));assert.equal(j.phase,'closing');assert.equal(j.distance,0);stepMetro(j,.25);assert.equal(j.distance,0);assert(j.doors>0);tick(stepMetro,j,1);assert.equal(j.phase,'riding');assert.equal(j.doors,0);

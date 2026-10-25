@@ -1,4 +1,4 @@
-import {clamp,routeLength,sampleRoute,transitRoute} from './core.mjs';
+import {clamp,routeLength,sampleRoute,transitRoute} from './core.mjs?v=5';
 export const BUS_ROUTE=[{x:-236,z:-136},{x:236,z:-136},{x:236,z:136},{x:-236,z:136},{x:-236,z:-136}];
 export const BUS_STOPS=[
  {id:'jongno',name:'종로·광화문',x:-190,z:-122,dockX:-190,dockZ:-136,distance:46},
@@ -13,7 +13,7 @@ export function stepMetro(j,dt){
  if(j.phase==='approach'){j.arrivingOffset=Math.max(0,48*(1-clamp(j.clock/5,0,1))**2);if(j.clock>=5){j.phase='boarding';j.clock=0}}
  else if(j.phase==='boarding')j.doors=clamp(j.doors+dt,0,1);
  else if(j.phase==='closing'){j.doors=Math.max(0,j.doors-dt);if(j.doors===0){j.phase='riding';j.clock=0}}
- else if(j.phase==='riding'){j.distance=Math.min(j.total,j.distance+dt*55);if(j.distance>=j.total){j.phase='alighting';j.clock=0}}
+ else if(j.phase==='riding'){j.distance=Math.min(j.total,j.distance+dt*(j.line===3?140:55));if(j.distance>=j.total){j.phase='alighting';j.clock=0}}
  else if(j.phase==='alighting'||j.phase==='exit')j.doors=clamp(j.doors+dt,0,1);
  return j;
 }

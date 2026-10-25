@@ -1,11 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {STATIONS,WEAPONS,VEHICLE_TYPES,groundHeight,districtAt,moveBody,lineBlocked,damageVitals,transitRoute,routeLength,sampleRoute,chooseExit,vehicleStep,BRIDGES,HILLS,blockedAt} from '../core.mjs';
+import {STATIONS,WEAPONS,VEHICLE_TYPES,groundHeight,districtAt,moveBody,lineBlocked,damageVitals,transitRoute,routeLength,sampleRoute,chooseExit,vehicleStep,BRIDGES,HILLS,blockedAt} from '../core.mjs?v=5';
 
 test('Seoul sectors sit north and south of Hangang',()=>{
  assert.equal(groundHeight(55,-100),32);assert.equal(groundHeight(200,200),0);
- assert.equal(districtAt(-200,-200),'강북 · 종로·도심');assert.equal(districtAt(200,-200),'강북 · 성동·광진');
- assert.equal(districtAt(-200,200),'강남권 · 여의도·서초');assert.equal(districtAt(200,200),'강남 · 삼성·잠실');
+ assert.equal(districtAt(-200,-200),'종로구');assert.equal(districtAt(200,-200),'종로구');
+ assert.equal(districtAt(-200,200),'마포구');assert.equal(districtAt(200,200),'용산구');
 });
 test('fast cars cannot pass through walls between frames',()=>{
  const wall=[{x:200,z:0,w:1,d:5,bottom:0,top:8}],p={x:195,z:0};
@@ -46,5 +46,5 @@ test('weapon choices have distinct magazines, rates and ammunition budgets',()=>
 
 test('Hangang navigation keeps cars on bridges without blocking bullets over water',()=>{
  const water=[{x:120,z:0,w:108,d:42,bottom:-30,top:4,kind:'water'}];
- assert(blockedAt(120,0,.4,water));assert(!blockedAt(240,0,.4,water));assert(!lineBlocked({x:120,y:2,z:-60},{x:120,y:2,z:60},water));assert.equal(BRIDGES.length,3);assert.equal(HILLS.length,2);
+ assert(blockedAt(120,0,.4,water));assert(!blockedAt(240,0,.4,water));assert(!lineBlocked({x:120,y:2,z:-60},{x:120,y:2,z:60},water));assert.equal(BRIDGES.length,11);assert.equal(HILLS.length,7);
 });

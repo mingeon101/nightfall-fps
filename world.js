@@ -1,4 +1,4 @@
-import {STATIONS,DISTRICTS,VEHICLE_TYPES,BRIDGES,HILLS,groundHeight} from './core.mjs';
+import {STATIONS,DISTRICTS,VEHICLE_TYPES,BRIDGES,HILLS,groundHeight} from './core.mjs?v=5';
 export function buildWorld(T,scene){
  const blocks=[],landmarks=[],vehicles=[],pickups=[],people=[],batches=new Map(),colliders=[];
  let seed=7101;const rand=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
@@ -92,5 +92,5 @@ export function buildWorld(T,scene){
  const trains=[];
  // One instanced draw per material for thousands of architectural details.
  const transform=new T.Object3D();for(const [material,parts]of batches){const inst=new T.InstancedMesh(new T.BoxGeometry(1,1,1),material,parts.length);parts.forEach((p,i)=>{transform.position.set(p.x,p.y,p.z);transform.scale.set(p.w,p.h,p.d);transform.updateMatrix();inst.setMatrixAt(i,transform.matrix)});inst.computeBoundingSphere();scene.add(inst);colliders.push(inst)}
- return {blocks,landmarks,vehicles,pickups,people,trains,m,cube,label,rand};
+ return {blocks,landmarks,vehicles,pickups,people,trains,m,cube,label,rand,vehicle,person,pickup};
 }
