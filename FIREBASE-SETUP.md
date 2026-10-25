@@ -4,7 +4,7 @@
 
 ## Firebase 콘솔에서 필요한 설정
 
-1. [Authentication → Sign-in method](https://console.firebase.google.com/project/login-ccf94/authentication/providers)에서 **Google**을 활성화하고 지원 이메일을 선택합니다. **Phone**도 활성화합니다.
+1. [Authentication → Sign-in method](https://console.firebase.google.com/project/login-ccf94/authentication/providers)에서 **Google**을 활성화하고 지원 이메일을 선택합니다. **Phone**과 **Anonymous(익명)**도 활성화합니다.
 2. [Authentication → Settings](https://console.firebase.google.com/project/login-ccf94/authentication/settings)의 **Authorized domains**에 `mingeon101.github.io`를 추가합니다. URL 경로나 `?v=6`을 입력하지 않습니다.
 3. 전화번호 인증의 SMS 지역 정책에서 사용할 국가(예: 대한민국)를 허용하고, 프로젝트의 SMS 한도·결제 설정을 확인합니다. 개발 중에는 Firebase의 테스트 전화번호와 테스트 코드를 이용할 수 있습니다. reCAPTCHA는 사용자가 직접 완료합니다.
 4. [Realtime Database → Rules](https://console.firebase.google.com/project/login-ccf94/database/login-ccf94-default-rtdb/rules)에서 **기존 다른 앱의 규칙을 보존하면서**, [firebase-rules.fragment.json](firebase-rules.fragment.json)의 `nightfallSaves` 내용을 현재 `rules` 객체의 자식으로 병합해 게시합니다.
@@ -25,7 +25,7 @@ nightfallSaves/{Firebase Auth UID}/slot1
 
 ## 게임에서의 사용
 
-- **로그인 · 저장** 버튼에서 Google 또는 전화번호 로그인.
+- **로그인 · 저장** 버튼에서 Google·전화번호 로그인 또는 **익명으로 시작**.
 - 전화번호는 `01012345678` 또는 `+821012345678`처럼 입력할 수 있습니다. 전송 안내에 동의하고 reCAPTCHA를 완료한 후 인증 문자를 요청합니다.
 - 기존 저장이 있으면 **클라우드 불러오기**를 누릅니다. 현재 진행을 사용할 경우 **현재 진행 저장**을 누릅니다. 기존 데이터를 교체할 때는 확인 창을 표시합니다.
 - 처음 저장하거나 불러온 뒤, 플레이 중 30초마다 자동 저장합니다. 로그인만으로 이전 계정·게스트의 진행을 새 계정에 자동 복사하지 않습니다.
@@ -34,8 +34,10 @@ nightfallSaves/{Firebase Auth UID}/slot1
 - RTDB 권한 거부·네트워크 오류를 저장 성공으로 표시하지 않습니다. 마지막으로 읽거나 쓴 데이터의 로컬 백업도 UID별로 분리하지만, 앱의 불러오기 버튼은 RTDB에서 확인한 저장을 사용합니다.
 - Google 로그인과 전화번호 로그인은 Firebase에서 별도 UID가 될 수 있습니다. 이 버전은 계정 연결·자동 병합 기능을 제공하지 않습니다.
 
+익명 계정은 실제 Firebase UID를 발급받아 같은 저장 경로와 규칙을 사용합니다. 같은 브라우저의 로그인 상태를 유지해야 하며 로그아웃·사이트 데이터 삭제 후에는 복구하지 못할 수 있습니다. 다른 계정으로 연결하거나 저장을 이전하는 기능은 없습니다.
+
 ## 검증 범위
 
 실제 계정 로그인, reCAPTCHA, SMS 발송, 운영 RTDB 쓰기를 대신 실행하지 않았습니다. 제공된 설정의 콘솔 상태를 확인하기 위한 네트워크 요청도 현재 실행 환경에서 실패했습니다. 자동 검사에서는 모의 SDK로 사용자별 경로, 기존 저장 보호, 충돌 처리, 로그아웃 분리, SMS 동의·재요청 제한·입력 검증을 확인했습니다. 보안 규칙의 실제 서버 적용과 실기기 로그인은 별도 확인이 필요합니다.
 
-공식 문서: [Google 로그인](https://firebase.google.com/docs/auth/web/google-signin), [전화번호 로그인](https://firebase.google.com/docs/auth/web/phone-auth), [RTDB 사용자별 규칙](https://firebase.google.com/docs/database/security/rules-conditions), [웹 SDK CDN](https://firebase.google.com/docs/web/alt-setup).
+공식 문서: [익명 로그인](https://firebase.google.com/docs/auth/web/anonymous-auth), [Google 로그인](https://firebase.google.com/docs/auth/web/google-signin), [전화번호 로그인](https://firebase.google.com/docs/auth/web/phone-auth), [RTDB 사용자별 규칙](https://firebase.google.com/docs/database/security/rules-conditions), [웹 SDK CDN](https://firebase.google.com/docs/web/alt-setup).
