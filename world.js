@@ -61,7 +61,7 @@ export function buildWorld(T,scene){
  label('강변북로',-80,5,-72,'#a8e0d0',22);label('올림픽대로',80,5,72,'#a8e0d0',24);label('테헤란로',180,5,240,'#a8e0d0',22);
 
  // Subway tunnels really sit below the ground. L1 is above the L2 ring.
- function tunnelSegment(a,b,y,color){const dx=b.x-a.x,dz=b.z-a.z,length=Math.hypot(dx,dz),x=(a.x+b.x)/2,z=(a.z+b.z)/2,horizontal=Math.abs(dx)>Math.abs(dz);cube(horizontal?length+5:7,.3,horizontal?7:length+5,x,y-.3,z,m.dark);cube(horizontal?length+5:7,.3,horizontal?7:length+5,x,y+5,z,m.dark);for(const side of [-1,1]){cube(horizontal?length+5:.25,5,horizontal?.25:length+5,x+(horizontal?0:side*3.6),y+2.3,z+(horizontal?side*3.6:0),m.concrete);cube(horizontal?length:.1,.1,horizontal?.1:length,x+(horizontal?0:side*1),y+.1,z+(horizontal?side*1:0),m.metal)}for(let d=0;d<length;d+=25){const t=d/length;cube(horizontal?1:3,.08,horizontal?3:1,a.x+dx*t,y+4.7,a.z+dz*t,color)}}
+ function tunnelSegment(a,b,y,color){const dx=b.x-a.x,dz=b.z-a.z,length=Math.hypot(dx,dz),x=(a.x+b.x)/2,z=(a.z+b.z)/2,horizontal=Math.abs(dx)>Math.abs(dz);cube(horizontal?length+5:7,.3,horizontal?7:length+5,x,y-.3,z,m.dark);cube(horizontal?length+5:7,.3,horizontal?7:length+5,x,y+5,z,m.dark);for(const side of [-1,1]){for(let q=0;q<length;q+=10){const n=Math.min(10,length-q),t=(q+n/2)/length,px=a.x+dx*t,pz=a.z+dz*t;if(STATIONS.some(s=>Math.hypot(s.x-px,s.z-pz)<38))continue;cube(horizontal?n:.25,5,horizontal?.25:n,px+(horizontal?0:side*3.6),y+2.3,pz+(horizontal?side*3.6:0),m.concrete)}cube(horizontal?length:.1,.1,horizontal?.1:length,x+(horizontal?0:side*1),y+.1,z+(horizontal?side*1:0),m.metal)}for(let d=0;d<length;d+=25){const t=d/length;cube(horizontal?1:3,.08,horizontal?3:1,a.x+dx*t,y+4.7,a.z+dz*t,color)}}
  tunnelSegment(STATIONS[0],STATIONS[1],-10,m.blue);for(let i=0;i<4;i++)tunnelSegment(STATIONS[i],STATIONS[(i+1)%4],-17,m.green);
  for(const s of STATIONS){cube(8,4,5,s.x,2,s.z+12,m.dark);cube(8.4,.4,5.4,s.x,4.2,s.z+12,s.lines.length===2?m.blue:m.green);label(`Ⓜ ${s.name} ${s.lines.join('·')}호선`,s.x,6.5,s.z+12,'#8acdec',19);cube(8,.1,8,s.x,.1,s.z+12,m.glass);landmarks.push({name:'Ⓜ '+s.name,x:s.x,z:s.z+12})}
  // Shared articulated humanoid rigs, with shoulder and hip pivots.
@@ -89,9 +89,7 @@ export function buildWorld(T,scene){
  pickup('weapon',224,-115,1);pickup('armor',228,-115);pickup('ammo',232,-115);pickup('medkit',236,-115);
  for(const d of DISTRICTS){pickup('armor',d.x<0?-230:230,d.z<0?-225:225);pickup('ammo',d.x<0?-230:230,d.z<0?-215:215)}
  pickup('weapon',-230,-180,2);pickup('weapon',230,180,3);pickup('weapon',-230,180,3);pickup('medkit',260,-350);pickup('medkit',250,300);
- // Animated physical train models stay in the underground tunnels.
- function train(color){const root=new T.Group();scene.add(root);const material=mat(color);for(let i=0;i<2;i++){cube(2.5,2.6,10,0,1.4,i*11,material,false,root);cube(2.1,1, .06,0,2,-5.05+i*11,m.window,false,root);for(const side of [-1,1])for(let z=-3;z<=3;z+=2)cube(.04,1,1.2,side*1.27,2,z+i*11,m.glass,false,root)}return root}
- const trains=[{line:1,root:train(0x548bc0),distance:0},{line:2,root:train(0x72a269),distance:0}];
+ const trains=[];
  // One instanced draw per material for thousands of architectural details.
  const transform=new T.Object3D();for(const [material,parts]of batches){const inst=new T.InstancedMesh(new T.BoxGeometry(1,1,1),material,parts.length);parts.forEach((p,i)=>{transform.position.set(p.x,p.y,p.z);transform.scale.set(p.w,p.h,p.d);transform.updateMatrix();inst.setMatrixAt(i,transform.matrix)});inst.computeBoundingSphere();scene.add(inst);colliders.push(inst)}
  return {blocks,landmarks,vehicles,pickups,people,trains,m,cube,label,rand};
