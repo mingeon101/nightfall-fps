@@ -1,16 +1,16 @@
 // Pure simulation rules shared by the game and its regression checks.
 export const LIMIT=425;
 export const DISTRICTS=[
- {id:'industrial',name:'산업지구',x:-230,z:-230,color:'#c6a16b'},
- {id:'residential',name:'주거지구',x:230,z:-230,color:'#78b8dc'},
- {id:'military',name:'군사지구',x:-230,z:230,color:'#b4c884'},
- {id:'commercial',name:'상업지구',x:230,z:230,color:'#d59bcb'}
+ {id:'jongno',name:'강북 · 종로·도심',x:-200,z:-220,color:'#d5ba80'},
+ {id:'gangbuk',name:'강북 · 성동·광진',x:230,z:-220,color:'#8abbd3'},
+ {id:'yeouido',name:'강남권 · 여의도·서초',x:-230,z:220,color:'#a8c890'},
+ {id:'gangnam',name:'강남 · 삼성·잠실',x:230,z:220,color:'#d9a1ca'}
 ];
 export const STATIONS=[
- {id:'industry',name:'산업단지',x:-220,z:-140,district:'industrial',lines:[1,2]},
- {id:'home',name:'주거중앙',x:220,z:-140,district:'residential',lines:[1,2]},
- {id:'market',name:'상업중앙',x:220,z:140,district:'commercial',lines:[2]},
- {id:'base',name:'공항·군사기지',x:-220,z:140,district:'military',lines:[2]}
+ {id:'industry',name:'종로·광화문',x:-220,z:-140,district:'jongno',lines:[1,2]},
+ {id:'home',name:'왕십리·성수',x:220,z:-140,district:'gangbuk',lines:[1,2]},
+ {id:'market',name:'강남·삼성',x:220,z:140,district:'gangnam',lines:[2]},
+ {id:'base',name:'여의도·서초',x:-220,z:140,district:'yeouido',lines:[2]}
 ];
 export const WEAPONS=[
  {id:'ar',name:'AR–41 돌격소총',mag:30,reserve:180,damage:35,interval:.12,reload:1.8,pellets:1,spread:.008,range:180,color:0x4e6454},
@@ -26,8 +26,10 @@ export const VEHICLE_TYPES={
  helicopter:{name:'헬리콥터',speed:35,accel:10,turn:1.4,radius:2.6,eye:2.5,flying:true,hover:true,lift:14,ceiling:150,armed:true}
 };
 export function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
-export function groundHeight(x,z){return Math.max(0,1-Math.hypot(x,z)/108)*75}
-export function districtAt(x,z){if(Math.hypot(x,z)<120)return '중앙산';return DISTRICTS.find(d=>Math.sign(d.x)===Math.sign(x||1)&&Math.sign(d.z)===Math.sign(z||1)).name}
+export const HILLS=[{x:-75,z:-415,radius:48,height:45,name:'북악산'},{x:55,z:-100,radius:38,height:32,name:'남산'}];
+export const BRIDGES=[{x:-240,name:'마포대교'},{x:0,name:'반포대교'},{x:240,name:'한남대교'}];
+export function groundHeight(x,z){return Math.max(0,...HILLS.map(h=>Math.max(0,1-Math.hypot(x-h.x,z-h.z)/h.radius)*h.height))}
+export function districtAt(x,z){if(Math.abs(z)<42)return '한강 · '+(BRIDGES.find(b=>Math.abs(x-b.x)<12)?.name||'수변');const h=HILLS.find(h=>Math.hypot(x-h.x,z-h.z)<h.radius);if(h)return h.name;return DISTRICTS.find(d=>Math.sign(d.x)===Math.sign(x||1)&&Math.sign(d.z)===Math.sign(z||1)).name}
 export function blockedAt(x,z,r,blocks,y=0,height=1.8){return Math.abs(x)>LIMIT-r||Math.abs(z)>LIMIT-r||blocks.some(b=>Math.abs(x-b.x)<b.w+r&&Math.abs(z-b.z)<b.d+r&&y<b.top&&y+height>b.bottom)}
 export function moveBody(pos,dx,dz,blocks,r=.4,y=0,height=1.8){
  const steps=Math.max(1,Math.ceil(Math.hypot(dx,dz)/.45));let collided=false;
@@ -38,7 +40,7 @@ export function moveBody(pos,dx,dz,blocks,r=.4,y=0,height=1.8){
 }
 export function lineBlocked(a,b,blocks){
  const dx=b.x-a.x,dy=b.y-a.y,dz=b.z-a.z;
- for(const o of blocks){let lo=0,hi=1;for(const [p,d,min,max]of [[a.x,dx,o.x-o.w,o.x+o.w],[a.y,dy,o.bottom,o.top],[a.z,dz,o.z-o.d,o.z+o.d]]){if(Math.abs(d)<1e-8){if(p<min||p>max){hi=-1;break}}else{let t1=(min-p)/d,t2=(max-p)/d;if(t1>t2)[t1,t2]=[t2,t1];lo=Math.max(lo,t1);hi=Math.min(hi,t2)}}if(hi>=Math.max(lo,.001)&&lo<.999&&hi>0)return true}
+ for(const o of blocks){if(o.kind==='water')continue;let lo=0,hi=1;for(const [p,d,min,max]of [[a.x,dx,o.x-o.w,o.x+o.w],[a.y,dy,o.bottom,o.top],[a.z,dz,o.z-o.d,o.z+o.d]]){if(Math.abs(d)<1e-8){if(p<min||p>max){hi=-1;break}}else{let t1=(min-p)/d,t2=(max-p)/d;if(t1>t2)[t1,t2]=[t2,t1];lo=Math.max(lo,t1);hi=Math.min(hi,t2)}}if(hi>=Math.max(lo,.001)&&lo<.999&&hi>0)return true}
  const samples=Math.max(1,Math.ceil(Math.hypot(dx,dz)/5));for(let i=1;i<samples;i++){const t=i/samples;if(a.y+dy*t<groundHeight(a.x+dx*t,a.z+dz*t))return true}return false;
 }
 export function damageVitals(health,armor,damage){const absorbed=Math.min(armor,damage*.75);return {health:Math.max(0,health-damage+absorbed),armor:armor-absorbed}}

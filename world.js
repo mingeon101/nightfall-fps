@@ -1,4 +1,4 @@
-import {STATIONS,DISTRICTS,VEHICLE_TYPES} from './core.mjs';
+import {STATIONS,DISTRICTS,VEHICLE_TYPES,BRIDGES,HILLS,groundHeight} from './core.mjs';
 export function buildWorld(T,scene){
  const blocks=[],landmarks=[],vehicles=[],pickups=[],people=[],batches=new Map(),colliders=[];
  let seed=7101;const rand=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
@@ -10,29 +10,56 @@ export function buildWorld(T,scene){
   if(collision)blocks.push({x,z,w:w/2,d:d/2,bottom:y-h/2,top:y+h/2});
  }
  function label(text,x,y,z,color='#d7e8ce',size=15){const c=document.createElement('canvas');c.width=512;c.height=96;const ctx=c.getContext('2d');ctx.fillStyle='#10202ddd';ctx.fillRect(0,0,512,96);ctx.strokeStyle=color;ctx.lineWidth=3;ctx.strokeRect(1,1,510,94);ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold 36px sans-serif';ctx.fillText(text,256,49,490);const s=new T.Sprite(new T.SpriteMaterial({map:new T.CanvasTexture(c),transparent:true,depthTest:true}));s.position.set(x,y,z);s.scale.set(size,size*96/512,1);scene.add(s);return s}
- cube(860,.5,860,0,-.3,0,m.ground);
- // Roads: an inner ring plus a grid in each quadrant, never through the mountain.
- for(const n of [-340,-240,-140,140,240,340]){cube(19,.04,820,n,.015,0,m.road);cube(820,.04,19,0,.015,n,m.road);for(let k=-400;k<410;k+=18){cube(.22,.06,6,n,.04,k,m.yellow);cube(6,.06,.22,k,.04,n,m.yellow)}}
- const mountain=new T.Mesh(new T.ConeGeometry(108,75,14,3),mat(0x5a6d61,{flatShading:true}));mountain.position.y=37.5;scene.add(mountain);const peak=new T.Mesh(new T.ConeGeometry(20,14,8),m.sand);peak.position.y=68;scene.add(peak);label('중앙산 · CENTRAL PEAK',0,83,0,'#b3d78e',40);
- for(let i=0;i<80;i++){const a=i*2.399,r=112+rand()*16,x=Math.cos(a)*r,z=Math.sin(a)*r;cube(.5,3,.5,x,1.5,z,m.sand);const tree=new T.Mesh(new T.ConeGeometry(2+rand(),6+rand()*3,5),m.green);tree.position.set(x,6,z);scene.add(tree)}
- function building(name,x,z,w,d,h,material=m.concrete,windows=true){cube(w,h,d,x,h/2,z,material,true);cube(w+.6,.6,d+.6,x,h,z,m.dark);if(windows){for(let y=3;y<h-1;y+=3.5)for(let k=-w/2+2;k<w/2-1;k+=3){cube(1.1,1.3,.07,x+k,y,z+d/2+.05,rand()>.42?m.window:m.glass);cube(1.1,1.3,.07,x+k,y,z-d/2-.05,rand()>.42?m.window:m.glass)}}if(name){landmarks.push({name,x,z});label(name,x,Math.min(h+3,28),z,'#d6e3d9',Math.min(20,w+5))}return {x,z,w,d,h}}
- // Dense apartments and civic facilities; entrances open onto the street grid.
- for(const x of [175,205,275,305,375])for(const z of [-180,-205,-275,-305,-375]){if(x>=275&&z<=-275)continue;building(null,x,z,17,17,23+Math.floor(rand()*5)*5,m.concrete)}
- building('한빛 초·중학교',285,-285,46,32,10,m.sand);cube(43,.07,28,285,.08,-315,m.green);for(let i=0;i<3;i++)cube(2,.3,2,274+i*11,.3,-315,m.white);
- building('중앙 경찰서',375,-280,24,28,12,m.blue);building('119 소방서',375,-375,28,27,10,m.red);building('중앙 종합병원',282,-375,44,28,23,m.white);cube(3,10,.3,282,16,-360.6,m.red);cube(9,3,.3,282,16,-360.5,m.red);building('시청 · 관공서',375,-180,27,35,20,m.sand);
- // Industrial quarter: warehouses, container yards, chimneys and factory tanks.
- for(const x of [-190,-290,-380])for(const z of [-190,-285,-380]){building(x===-190&&z===-190?'산업 물류센터':null,x,z,48,38,12+rand()*5,m.metal,false);for(let k=0;k<3;k++)cube(10,3.6,5,x-14+k*13,1.8,z+26,k%2?m.blue:m.red,true)}
- for(const x of [-180,-200,-280]){const chimney=new T.Mesh(new T.CylinderGeometry(2,3,38,10),m.sand);chimney.position.set(x,19,-395);scene.add(chimney);cube(6,.8,6,x,33,-395,m.red)}
- label('산업지구 · INDUSTRIAL',-240,45,-240,'#e1bf8b',42);
- // Shopping quarter: distinct anchors surrounded by a compact retail grid.
- building('NIGHTFALL 백화점',185,185,52,45,30,m.violet);building('CENTRAL 아울렛',285,185,58,40,13,m.sand);building('시티 쇼핑몰',375,185,35,45,24,m.glass);
- for(const x of [180,205,280,310,375])for(const z of [280,310,375]){building(x===280&&z===280?'상업 거리 · RETAIL':null,x,z,18,19,8+rand()*12,rand()>.5?m.concrete:m.red);cube(19,.4,2,x,4,z+10,m.yellow)}
- // Military quarter: long runway, taxiway, hangars, barracks and a control tower.
- cube(34,.08,250,-350,.06,255,m.road);for(let z=145;z<380;z+=16)cube(1,.1,8,-350,.13,z,m.white);for(const x of [-362,-338])for(let z=138;z<380;z+=14)cube(.5,.15,.5,x,.15,z,m.window);
- building('공항 격납고',-395,195,34,48,18,m.metal,false);building('제2 격납고',-395,295,34,48,18,m.metal,false);building('공항 터미널',-290,110,42,22,12,m.glass);building('군사 관제탑',-292,185,15,15,32,m.concrete);cube(23,6,20,-292,31,185,m.glass,true);
- building('군사기지 · 지휘부',-185,190,40,32,15,m.sand);building('병영',-190,285,40,30,10,m.sand);building('군수 창고',-285,375,45,25,11,m.metal,false);
- for(const z of [275,300,325]){cube(18,1.2,1,-290,.6,z,m.sand,true);cube(4,1.2,1,-260,.6,z,m.sand,true)}
- for(const d of DISTRICTS)label(d.name,d.x,40,d.z,d.color,32);
+ // Seoul is a compressed, fictional game layout: west/east x, north/south z.
+ cube(860,.5,382,0,-.3,-234,m.ground);cube(860,.5,382,0,-.3,234,m.ground);
+ const water=mat(0x237b9f,{metalness:.45,roughness:.3}),roofSlate=mat(0x354f59),roofBlue=mat(0x28648a),palaceRed=mat(0x973e32),gold=mat(0xaa9154,{metalness:.5});
+ const river=new T.Mesh(new T.PlaneGeometry(860,84),water);river.rotation.x=-Math.PI/2;river.position.y=-.08;scene.add(river);
+ // Invisible navigation boundaries keep pedestrians and cars on bridges; gunfire can pass over water.
+ for(const [a,b]of [[-425,-252],[-228,-12],[12,228],[252,425]])blocks.push({x:(a+b)/2,z:0,w:(b-a)/2,d:42,bottom:-30,top:4,kind:'water'});
+ for(const bank of [-1,1]){cube(860,.15,9,0,.03,bank*49,m.green);cube(860,.05,4,0,.06,bank*57,m.sand);cube(860,.06,18,0,.03,bank*72,m.road);for(let k=-408;k<420;k+=16)cube(7,.1,.2,k,.08,bank*72,m.yellow)}
+ for(const x of [-340,-240,-140,0,140,240,340])for(const side of [-1,1]){cube(18,.05,338,x,.02,side*244,m.road);cube(22,.04,338,x,.005,side*244,m.sand);for(let z=90;z<411;z+=16)cube(.22,.1,6,x,.08,side*z,m.yellow)}
+ for(const z of [-340,-240,-140,140,240,340]){cube(820,.06,18,0,.03,z,m.road);cube(820,.04,22,0,.01,z,m.sand);for(let x=-405;x<410;x+=16)cube(6,.1,.22,x,.09,z,m.yellow)}
+ for(const b of BRIDGES){cube(24,.3,100,b.x,-.08,0,m.concrete);cube(18,.1,104,b.x,.11,0,m.road);for(let z=-48;z<=48;z+=12){cube(.25,.2,5,b.x,.2,z,m.yellow);for(const side of [-1,1])cube(.25,1.15,8,b.x+side*11.5,.6,z,m.metal)}for(const z of [-28,28])cube(3,5,4,b.x,-2.5,z,m.concrete);label(b.name,b.x,5,8,'#c4e8f8',20)}
+ label('한강 · HANGANG RIVER',-90,2,0,'#b3eaff',48);
+ // Hills are north of the river; their collision heights match the visual geometry.
+ for(const h of HILLS){const mesh=new T.Mesh(new T.ConeGeometry(h.radius,h.height,18,3),mat(0x526b56,{flatShading:true}));mesh.position.set(h.x,h.height/2,h.z);scene.add(mesh);label(h.name,h.x,h.height+6,h.z,'#b8db9c',23);for(let i=0;i<24;i++){const a=i*2.399,r=h.radius+3+rand()*8,x=h.x+Math.cos(a)*r,z=h.z+Math.sin(a)*r;if(Math.abs(z)>420)continue;const tree=new T.Mesh(new T.ConeGeometry(1.8,6,5),m.green);tree.position.set(x,3,z);scene.add(tree)}}
+ function building(name,x,z,w,d,h,material=m.concrete,windows=true){cube(w,h,d,x,h/2,z,material,true);cube(w+.6,.5,d+.6,x,h,z,m.dark);if(windows){for(let y=3;y<h-1;y+=3.5)for(let k=-w/2+2;k<w/2-1;k+=3){cube(1.1,1.3,.07,x+k,y,z+d/2+.05,rand()>.42?m.window:m.glass);cube(1.1,1.3,.07,x+k,y,z-d/2-.05,rand()>.42?m.window:m.glass)}}if(name){landmarks.push({name,x,z});label(name,x,Math.min(h+4,38),z,'#e0e9df',Math.min(23,w+5))}return {x,z,w,d,h}}
+ function roof(w,d,x,y,z,blue=false){const mesh=new T.Mesh(new T.CylinderGeometry(.6,1,3,4),blue?roofBlue:roofSlate);mesh.rotation.y=Math.PI/4;mesh.scale.set(w/Math.SQRT2,1,d/Math.SQRT2);mesh.position.set(x,y,z);scene.add(mesh);cube(w+1,.3,d+1,x,y-1.4,z,blue?roofBlue:roofSlate)}
+ function hall(name,x,z,w,d,h=7,blue=false){cube(w+4,1,d+4,x,.5,z,m.sand,true);cube(w-3,h-1,d-3,x,(h+1)/2,z,m.white,true);for(let col=-w/2+1;col<w/2;col+=4)for(const side of [-1,1])cube(.6,h,.6,x+col,h/2,z+side*(d/2-.5),palaceRed);roof(w+5,d+5,x,h+1,z,blue);if(name){landmarks.push({name,x,z});label(name,x,h+5,z,blue?'#a1ddff':'#f0d7ad',25)}}
+ // Public exterior silhouettes only, with open visitor courtyards.
+ cube(110,.08,112,-70,.03,-265,m.sand);
+ hall('경복궁 · 근정전',-70,-265,34,22,8);roof(28,20,-70,14,-265);cube(24,3.2,16,-70,11.2,-265,m.white,true);
+ hall('경회루',-112,-291,19,15,6);cube(27,.07,23,-112,.1,-291,water);
+ hall('사정전',-70,-305,23,15,6);
+ for(const x of [-124,-16])cube(1.5,3,106,x,1.5,-265,m.sand,true);cube(108,3,1.5,-70,1.5,-318,m.sand,true);
+ for(const x of [-108,-32])cube(32,3,1.5,x,1.5,-210,m.sand,true);
+ for(const x of [-79,-61])cube(8,5,10,x,2.5,-207,m.white,true);roof(30,15,-70,7,-207);roof(23,13,-70,11,-207);landmarks.push({name:'광화문',x:-70,z:-207});label('광화문',-70,16,-207,'#f2d49e',20);
+ hall('청와대',-70,-354,34,18,8,true);hall(null,-99,-354,18,15,6,true);hall(null,-41,-354,18,15,6,true);cube(92,.07,18,-70,.05,-333,m.green);
+ // Civic and cultural anchors north of the river.
+ building('서울시청',-75,-171,42,20,20,m.glass);building('서울역',-193,-110,34,23,13,m.red);roof(40,27,-193,16,-110);building('DDP · 동대문',200,-275,40,24,13,m.metal);
+ const towerBase=groundHeight(55,-100);const shaft=new T.Mesh(new T.CylinderGeometry(1.4,2,27,12),m.white);shaft.position.set(55,towerBase+13.5,-100);scene.add(shaft);const deck=new T.Mesh(new T.CylinderGeometry(7,5.5,6,16),m.glass);deck.position.set(55,towerBase+29,-100);scene.add(deck);const needle=new T.Mesh(new T.CylinderGeometry(.2,.6,23,8),m.white);needle.position.set(55,towerBase+43,-100);scene.add(needle);landmarks.push({name:'남산서울타워',x:55,z:-100});label('남산서울타워',55,90,-100,'#e8f5ef',27);
+ // Bukchon has low tiled roofs rather than apartment towers.
+ for(const x of [32,58,87])for(const z of [-275,-305,-365])hall(null,x,z,15,11,4);
+ label('북촌 한옥마을',60,15,-305,'#ead4ac',25);
+ // High density apartment courts, with numbered towers and side balconies.
+ let apartmentCount=0;
+ function apartment(x,z,h){building(null,x,z,17,18,h,m.white);for(const side of [-1,1])for(let y=3;y<h;y+=3.5)cube(.9,.35,16,x+side*9,y,z,m.concrete);apartmentCount++;if(apartmentCount%4===1)label('서울 아파트 '+(100+apartmentCount)+'동',x,h+3,z,'#c1deee',14)}
+ for(const x of [175,205,280,310,380])for(const z of [-185,-205,-305,-375]){if(x===205&&z===-305)continue;apartment(x,z,27+Math.floor(rand()*5)*5)}
+ for(const x of [-380,-285,-185,175,205,280,380])for(const z of [280,310,380]){if(x===280&&z===310)continue;apartment(x,z,25+Math.floor(rand()*7)*5)}
+ for(const x of [-380,-285,-190])for(const z of [-185,-285,-380])building(null,x,z,22,24,10+rand()*15,m.concrete);
+ // Gangnam skyline and recognizable landmark silhouettes.
+ building('COEX · 코엑스',190,190,56,42,18,m.glass);building('무역센터',210,190,15,17,67,m.blue);
+ building('롯데월드타워',300,290,23,24,105,m.glass);const crown=new T.Mesh(new T.ConeGeometry(12,24,4),m.glass);crown.rotation.y=Math.PI/4;crown.position.set(300,117,290);scene.add(crown);
+ building('강남역 · 테헤란로',80,190,27,30,43,m.blue);building('도심 백화점',370,190,42,38,23,m.violet);
+ building('63빌딩',-180,185,18,20,72,gold);building('국회의사당',-285,180,52,30,15,m.sand);const dome=new T.Mesh(new T.SphereGeometry(13,18,12,0,Math.PI*2,0,Math.PI/2),m.green);dome.position.set(-285,15,180);scene.add(dome);
+ building('서울 종합병원',370,-275,30,27,20,m.white);cube(3,9,.3,370,13,-261.4,m.red);cube(9,3,.3,370,13,-261.3,m.red);building('학교',285,-275,34,25,10,m.sand);building('경찰서',-190,280,30,25,12,m.blue);building('119 소방서',-285,380,30,24,10,m.red);
+ // Fictional southwest training apron retains the previously added vehicles.
+ cube(25,.08,205,-350,.08,240,m.road);for(let z=146;z<340;z+=16)cube(1,.1,7,-350,.15,z,m.white);building('훈련 격납고 · 가상 시설',-395,200,30,40,15,m.metal,false);
+ for(const d of DISTRICTS)label(d.name,d.x,45,d.z,d.color,36);
+ // Zebra crossings, lane arrows, traffic lights and Korean road signs.
+ for(const z of [-140,140])for(const x of [-240,0,240]){for(let i=-7;i<=7;i+=2){cube(1,.12,6,x+i,.13,z+13,m.white);cube(6,.12,1,x+13,.13,z+i,m.white)}for(const sx of [-1,1]){cube(.18,5,.18,x+sx*12,2.5,z-12,m.dark);cube(1.8,.45,.4,x+sx*12,5,z-12,m.black);cube(.3,.3,.43,x+sx*12+.5,5,z-12,m.window)}}
+ label('강변북로',-80,5,-72,'#a8e0d0',22);label('올림픽대로',80,5,72,'#a8e0d0',24);label('테헤란로',180,5,240,'#a8e0d0',22);
+
  // Subway tunnels really sit below the ground. L1 is above the L2 ring.
  function tunnelSegment(a,b,y,color){const dx=b.x-a.x,dz=b.z-a.z,length=Math.hypot(dx,dz),x=(a.x+b.x)/2,z=(a.z+b.z)/2,horizontal=Math.abs(dx)>Math.abs(dz);cube(horizontal?length+5:7,.3,horizontal?7:length+5,x,y-.3,z,m.dark);cube(horizontal?length+5:7,.3,horizontal?7:length+5,x,y+5,z,m.dark);for(const side of [-1,1]){cube(horizontal?length+5:.25,5,horizontal?.25:length+5,x+(horizontal?0:side*3.6),y+2.3,z+(horizontal?side*3.6:0),m.concrete);cube(horizontal?length:.1,.1,horizontal?.1:length,x+(horizontal?0:side*1),y+.1,z+(horizontal?side*1:0),m.metal)}for(let d=0;d<length;d+=25){const t=d/length;cube(horizontal?1:3,.08,horizontal?3:1,a.x+dx*t,y+4.7,a.z+dz*t,color)}}
  tunnelSegment(STATIONS[0],STATIONS[1],-10,m.blue);for(let i=0;i<4;i++)tunnelSegment(STATIONS[i],STATIONS[(i+1)%4],-17,m.green);
@@ -45,19 +72,19 @@ export function buildWorld(T,scene){
  }
  // Combat cells keep the large city populated without attacking across districts.
  for(const d of DISTRICTS)for(const [dx,dz]of [[-9,-88],[8,-25],[-7,35],[8,90]]){const x=(d.x<0?-240:240)+dx,z=(d.z<0?-240:240)+dz;person(x,z,true)}
- for(let i=0;i<32;i++){const side=i%2?1:-1,x=side*(i%4<2?140:240)+((i%3)-1)*5,z=-380+(i%16)*48;person(x,z,false,i)}
+ for(let i=0;i<32;i++){const side=i%2?1:-1,x=side*(i%4<2?140:240)+((i%3)-1)*5,z=(i%4<2?-1:1)*(110+Math.floor(i/4)*36);person(x,z,false,i)}
  function vehicle(type,x,z,yaw=0,traffic=false,index=0){const root=new T.Group();root.position.set(x,0,z);root.rotation.y=yaw;scene.add(root);const spec=VEHICLE_TYPES[type],paint=type==='car'?[m.blue,m.red,m.white,m.yellow][index%4]:m.green;let rotor=null,turret=null;
-  if(type==='car'){cube(2.2,.8,4.5,0,.8,0,paint,false,root);cube(1.9,.85,2.2,0,1.6,.15,m.glass,false,root);cube(2,.12,2.3,0,2.05,.15,paint,false,root);for(const x of [-.75,.75])cube(.45,.25,.07,x,.9,-2.27,m.window)}
+  if(type==='car'){cube(2.2,.8,4.5,0,.8,0,paint,false,root);cube(1.9,.85,2.2,0,1.6,.15,m.glass,false,root);cube(2,.12,2.3,0,2.05,.15,paint,false,root);if(index%4===3)cube(.7,.25,.4,0,2.24,.15,m.yellow,false,root);for(const x of [-.75,.75])cube(.45,.25,.07,x,.9,-2.27,m.window)}
   if(type==='tank'){cube(3.8,1.2,6,0,1,0,paint,false,root);for(const x of [-1.8,1.8])cube(.7,1.4,5.8,x,.7,0,m.black,false,root);turret=new T.Group();turret.position.y=2;root.add(turret);cube(2.6,.85,2.7,0,0,0,paint,false,turret);cube(.24,.24,5,0,.1,-3,paint,false,turret)}
   if(type==='plane'||type==='fighter'){const big=type==='plane';cube(big?2.7:1.4,big?2.5:1.2,big?14:10,0,big?2.6:1.8,0,paint,false,root);cube(big?18:10,.22,big?3:2,0,big?2.8:1.7,1,paint,false,root);cube(big?7:5,.18,2,0,big?4:2.8,big?5:4,paint,false,root);cube(.22,big?3:2,2,0,big?4.2:3,big?5:4,paint,false,root);cube(big?1.8:1,.7,2,0,big?3.8:2.6,-3,m.glass,false,root)}
   if(type==='helicopter'){cube(2.4,2.2,4,0,2.1,0,paint,false,root);cube(2.2,1.4,1.3,0,2.2,-2,m.glass,false,root);cube(.55,.6,6,0,2.4,4,paint,false,root);cube(.2,2,1.4,0,3,6.5,paint,false,root);rotor=new T.Group();rotor.position.y=3.6;root.add(rotor);cube(11,.08,.3,0,0,0,m.black,false,rotor);cube(.3,.08,11,0,0,0,m.black,false,rotor);for(const x of [-1.4,1.4])cube(.15,.15,4.7,x,.4,0,m.dark,false,root)}
   if(type!=='tank'&&type!=='helicopter')for(const x of [-1.15,1.15])for(const z of [-1.35,1.35]){const wheel=new T.Mesh(new T.CylinderGeometry(.48,.48,.28,10),m.black);wheel.rotation.z=Math.PI/2;wheel.position.set(x,.48,z);root.add(wheel)}
-  const v={type,root,rotor,turret,x,z,y:0,yaw,speed:0,traffic,trafficOffset:index*71,occupied:false,origin:{x,z,yaw,traffic},cool:0};vehicles.push(v);return v;
+  const v={type,root,rotor,turret,x,z,y:0,yaw,speed:0,traffic,trafficOffset:index*71,trafficLane:index%2,occupied:false,origin:{x,z,yaw,traffic},cool:0};vehicles.push(v);return v;
  }
- for(let i=0;i<12;i++)vehicle('car',i%2?-140:140,300-i*48,0,true,i);
+ for(let i=0;i<16;i++)vehicle('car',i%2?-240:240,(i%4<2?-1:1)*(100+Math.floor(i/4)*40),0,true,i);
  vehicle('car',235,-116,0,false,3);vehicle('car',-235,-115,0,false,2);vehicle('car',220,116,0,false,0);
- vehicle('tank',-263,260);vehicle('tank',-263,318);vehicle('helicopter',-190,345);vehicle('fighter',-350,325);vehicle('plane',-350,215);
- cube(14,.06,14,-190,.07,345,m.dark);for(const x of [-192,-188])cube(.6,.12,7,x,.13,345,m.white);cube(4,.12,.6,-190,.13,345,m.white);
+ vehicle('tank',-260,260);vehicle('tank',-260,318);vehicle('helicopter',-110,345);vehicle('fighter',-350,325);vehicle('plane',-350,215);
+ cube(14,.06,14,-110,.07,345,m.dark);for(const x of [-112,-108])cube(.6,.12,7,x,.13,345,m.white);cube(4,.12,.6,-110,.13,345,m.white);
  function pickup(kind,x,z,weapon=0){const root=new T.Group();root.position.set(x,.8,z);scene.add(root);const color=kind==='armor'?0x7ad8f5:kind==='medkit'?0xf5ada0:kind==='ammo'?0xe3c67b:0xc6ed8b,material=mat(color,{emissive:color,emissiveIntensity:.3});if(kind==='weapon'){cube(.25,.22,1.8,0,0,0,material,false,root);cube(.14,.4,.18,0,-.2,.2,m.dark,false,root)}else cube(.8,.65,.45,0,0,0,material,false,root);const ring=new T.Mesh(new T.RingGeometry(.7,.82,16),new T.MeshBasicMaterial({color,side:T.DoubleSide}));ring.rotation.x=-Math.PI/2;ring.position.y=-.75;root.add(ring);pickups.push({kind,x,z,weapon,root,respawn:0})}
  pickup('weapon',224,-115,1);pickup('armor',228,-115);pickup('ammo',232,-115);pickup('medkit',236,-115);
  for(const d of DISTRICTS){pickup('armor',d.x<0?-230:230,d.z<0?-225:225);pickup('ammo',d.x<0?-230:230,d.z<0?-215:215)}
