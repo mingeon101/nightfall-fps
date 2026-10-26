@@ -1,3 +1,9 @@
+## 규칙 저장 오류 수정본
+
+Realtime Database 보안 규칙에는 numChildren() 메서드가 없습니다. 지원되는 hasChildren()과 키 정규식 검사로 대체했습니다. 게임 전용 DB라면 [firebase-database.rules.json](firebase-database.rules.json)의 전체 내용을 규칙 편집기에 복사하여 게시할 수 있습니다. 다른 앱이 같은 DB를 사용하면 전체 교체하지 말고 기존 rules 아래 nightfallSaves와 nightfallRooms만 병합하세요. 실제 서버 게시·에뮬레이터 검증은 아직 수행하지 못했습니다.
+
+공식 API: https://firebase.google.com/docs/reference/security/database
+
 ## V14 변경 사항
 
 열추적 미사일·플레어 입력, 공유 항공 무장 상태와 유도탄 표시를 지원합니다. 방 버전은 14이며 world.vehicles 행이 18개 필드로 확장되었습니다. 기존 규칙을 사용 중이면 새 multiplayer-rules.fragment.json의 nightfallRooms 전체를 현재 규칙의 해당 경로에 갱신해야 합니다. 다른 앱 규칙은 보존하세요. 실제 서버 적용은 대신 수행하지 못했습니다.
