@@ -6,6 +6,6 @@ test('malformed cloud data cannot inject out-of-world coordinates or invalid inv
 test('phone input is converted to E.164 without accepting arbitrary strings',()=>{assert.equal(normalizePhone('010-1234-5678'),'+821012345678');assert.equal(normalizePhone('+1 (415) 555-0123'),'+14155550123');assert.throws(()=>normalizePhone('abc'));assert.throws(()=>normalizePhone('1234'))});
 test('local backups are user-scoped and revisions detect conflicts',()=>{assert.notEqual(localSaveKey('userA'),localSaveKey('userB'));assert.throws(()=>localSaveKey('../user'));assert(shouldWriteRevision(null,0));assert(shouldWriteRevision({revision:3},3));assert(!shouldWriteRevision({revision:4},3))});
 
-test('all 1000 enemy IDs survive save normalization',()=>{const p=progress();p.defeatedEnemyIds=[0,15,16,288,299,300,999,1000];assert.deepEqual(normalizeSave(p).defeatedEnemyIds,[0,15,16,288,299,300,999])});
+test('500-enemy saves discard removed units from older 1000-enemy saves',()=>{const p=progress();p.defeatedEnemyIds=[0,15,16,288,299,300,499,500,999,1000];assert.deepEqual(normalizeSave(p).defeatedEnemyIds,[0,15,16,288,299,300,499])});
 
 test('legacy four-slot saves acquire RPG while new RPG ammo is preserved',()=>{const old=normalizeSave(progress());assert.equal(old.inventory.length,5);assert.deepEqual(old.inventory[4],{owned:true,ammo:1,reserve:8});old.selected=4;old.inventory[4].ammo=0;old.inventory[4].reserve=3;const saved=normalizeSave(old);assert.equal(saved.selected,4);assert.equal(saved.inventory[4].ammo,0);assert.equal(saved.inventory[4].reserve,3)});

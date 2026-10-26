@@ -31,7 +31,7 @@
           }
         },
         "defeatedEnemyIds": {
-          "$index": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 999 && newData.val() % 1 === 0" }
+          "$index": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 499 && newData.val() % 1 === 0" }
         },
         "$other": { ".validate": false }
       },

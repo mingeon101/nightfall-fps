@@ -1,5 +1,5 @@
-export const ENEMY_COUNT=1000;
-export const ALLY_COUNT=500;
+export const ENEMY_COUNT=500;
+export const ALLY_COUNT=50;
 // Horizontal buckets bound local searches without scanning entire armies.
 export class CombatIndex{
  constructor(size=100){this.size=size;this.cells=new Map()}
