@@ -41,3 +41,5 @@ nightfallSaves/{Firebase Auth UID}/slot1
 실제 계정 로그인, reCAPTCHA, SMS 발송, 운영 RTDB 쓰기를 대신 실행하지 않았습니다. 제공된 설정의 콘솔 상태를 확인하기 위한 네트워크 요청도 현재 실행 환경에서 실패했습니다. 자동 검사에서는 모의 SDK로 사용자별 경로, 기존 저장 보호, 충돌 처리, 로그아웃 분리, SMS 동의·재요청 제한·입력 검증을 확인했습니다. 보안 규칙의 실제 서버 적용과 실기기 로그인은 별도 확인이 필요합니다.
 
 공식 문서: [익명 로그인](https://firebase.google.com/docs/auth/web/anonymous-auth), [Google 로그인](https://firebase.google.com/docs/auth/web/google-signin), [전화번호 로그인](https://firebase.google.com/docs/auth/web/phone-auth), [RTDB 사용자별 규칙](https://firebase.google.com/docs/database/security/rules-conditions), [웹 SDK CDN](https://firebase.google.com/docs/web/alt-setup).
+
+V7: 적 300명 저장을 위해 defeatedEnemyIds 검증 상한을 15에서 299로 변경했습니다. 기존 규칙이 게시되어 있다면 이 값도 Firebase 콘솔에서 수정해야 합니다.
