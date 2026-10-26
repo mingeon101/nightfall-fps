@@ -1,4 +1,4 @@
-import {sanitizeCivic} from './civic-sim.mjs?v=18';
+import {sanitizeCivic} from './civic-sim.mjs?v=19';
 const finite=(v,f=0)=>typeof v==='number'&&Number.isFinite(v)?v:f;
 const bound=(v,a,b,f=a)=>Math.max(a,Math.min(b,finite(v,f)));
 export function normalizeSave(value){

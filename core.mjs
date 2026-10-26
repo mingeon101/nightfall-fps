@@ -1,4 +1,4 @@
-import {areaAt,AIRPORTS} from './atlas-data.mjs?v=18';
+import {areaAt,AIRPORTS} from './atlas-data.mjs?v=19';
 // Pure simulation rules shared by the game and its regression checks.
 export const LIMIT=3400;
 export const DISTRICTS=[
