@@ -1,4 +1,4 @@
-import {clamp,routeLength,sampleRoute,transitRoute} from './core.mjs?v=12';
+import {clamp,routeLength,sampleRoute,transitRoute} from './core.mjs?v=13';
 export const BUS_ROUTE=[{x:-236,z:-136},{x:236,z:-136},{x:236,z:136},{x:-236,z:136},{x:-236,z:-136}];
 export const BUS_STOPS=[
  {id:'jongno',name:'종로·광화문',x:-190,z:-122,dockX:-190,dockZ:-136,distance:46},

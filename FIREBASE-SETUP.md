@@ -49,3 +49,5 @@ V8: RPG는 inventory[4]에 저장됩니다. selected 검증 상한을 4로 변�
 V10: 적 1,000명의 진행 저장을 위해 defeatedEnemyIds 검증 상한을 999로 변경했습니다. 기존 규칙을 적용한 프로젝트는 이 값을 갱신해야 합니다.
 
 V12: 작전·새벽·민간인 사상 수·구금 진행은 civic 필드에 저장합니다. 갱신된 firebase-rules.fragment.json의 slot1.civic 규칙도 병합해야 합니다. 새 규칙을 적용하지 않으면 이전 $other 검증이 civic 저장을 거부합니다.
+
+V13: 4인 협동전은 nightfallRooms 경로를 사용합니다. 통합 규칙 파일에 포함했으며 [MULTIPLAYER-SETUP.md](MULTIPLAYER-SETUP.md)의 서버 설정을 먼저 적용해야 합니다.
