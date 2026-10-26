@@ -5,37 +5,99 @@
       "slot1": {
         ".write": "auth != null && auth.uid === $uid && newData.exists()",
         ".validate": "newData.hasChildren(['schemaVersion','worldVersion','playSeconds','player','selected','inventory','revision','updatedAt'])",
-        "schemaVersion": { ".validate": "newData.val() === 1" },
-        "worldVersion": { ".validate": "newData.val() === 6" },
-        "playSeconds": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000000" },
-        "selected": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 4 && newData.val() % 1 === 0" },
-        "revision": { ".validate": "newData.isNumber() && ((!data.exists() && newData.val() === 1) || (data.exists() && newData.val() === data.val() + 1))" },
-        "updatedAt": { ".validate": "newData.isNumber() && newData.val() <= now" },
+        "schemaVersion": {
+          ".validate": "newData.val() === 1"
+        },
+        "worldVersion": {
+          ".validate": "newData.val() === 6"
+        },
+        "playSeconds": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000000"
+        },
+        "selected": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 4 && newData.val() % 1 === 0"
+        },
+        "revision": {
+          ".validate": "newData.isNumber() && ((!data.exists() && newData.val() === 1) || (data.exists() && newData.val() === data.val() + 1))"
+        },
+        "updatedAt": {
+          ".validate": "newData.isNumber() && newData.val() <= now"
+        },
         "player": {
           ".validate": "newData.hasChildren(['x','z','health','armor','wallet'])",
-          "x": { ".validate": "newData.isNumber() && newData.val() >= -3390 && newData.val() <= 3390" },
-          "z": { ".validate": "newData.isNumber() && newData.val() >= -3390 && newData.val() <= 3390" },
-          "health": { ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 100" },
-          "armor": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100" },
-          "wallet": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000000" },
-          "$other": { ".validate": false }
+          "x": {
+            ".validate": "newData.isNumber() && newData.val() >= -3390 && newData.val() <= 3390"
+          },
+          "z": {
+            ".validate": "newData.isNumber() && newData.val() >= -3390 && newData.val() <= 3390"
+          },
+          "health": {
+            ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 100"
+          },
+          "armor": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
+          },
+          "wallet": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000000"
+          },
+          "$other": {
+            ".validate": false
+          }
         },
         "inventory": {
           ".validate": "newData.hasChildren(['0','1','2','3'])",
           "$index": {
             ".validate": "($index === '0' || $index === '1' || $index === '2' || $index === '3' || $index === '4') && newData.hasChildren(['owned','ammo','reserve'])",
-            "owned": { ".validate": "newData.isBoolean()" },
-            "ammo": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 40" },
-            "reserve": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100000" },
-            "$other": { ".validate": false }
+            "owned": {
+              ".validate": "newData.isBoolean()"
+            },
+            "ammo": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 40"
+            },
+            "reserve": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100000"
+            },
+            "$other": {
+              ".validate": false
+            }
           }
         },
         "defeatedEnemyIds": {
-          "$index": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 499 && newData.val() % 1 === 0" }
+          "$index": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 499 && newData.val() % 1 === 0"
+          }
         },
-        "$other": { ".validate": false }
+        "$other": {
+          ".validate": false
+        },
+        "civic": {
+          ".validate": "newData.hasChildren(['civilianKills','chiefDown','dawn','justice','justiceTime','escaped'])",
+          "civilianKills": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100000"
+          },
+          "chiefDown": {
+            ".validate": "newData.isBoolean()"
+          },
+          "dawn": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1"
+          },
+          "justice": {
+            ".validate": "newData.val() === 'free' || newData.val() === 'wanted' || newData.val() === 'station' || newData.val() === 'court' || newData.val() === 'prison'"
+          },
+          "justiceTime": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
+          },
+          "escaped": {
+            ".validate": "newData.isBoolean()"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
       },
-      "$other": { ".validate": false }
+      "$other": {
+        ".validate": false
+      }
     }
   }
 }

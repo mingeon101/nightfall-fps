@@ -1,4 +1,4 @@
-import {STATIONS,DISTRICTS,VEHICLE_TYPES,BRIDGES,HILLS,groundHeight} from './core.mjs?v=11';
+import {STATIONS,DISTRICTS,VEHICLE_TYPES,BRIDGES,HILLS,groundHeight} from './core.mjs?v=12';
 export function buildWorld(T,scene){
  const blocks=[],landmarks=[],vehicles=[],pickups=[],people=[],batches=new Map(),colliders=[];
  let seed=7101;const rand=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
@@ -34,7 +34,7 @@ export function buildWorld(T,scene){
  for(const x of [-124,-16])cube(1.5,3,106,x,1.5,-265,m.sand,true);cube(108,3,1.5,-70,1.5,-318,m.sand,true);
  for(const x of [-108,-32])cube(32,3,1.5,x,1.5,-210,m.sand,true);
  for(const x of [-79,-61])cube(8,5,10,x,2.5,-207,m.white,true);roof(30,15,-70,7,-207);roof(23,13,-70,11,-207);landmarks.push({name:'광화문',x:-70,z:-207});label('광화문',-70,16,-207,'#f2d49e',20);
- hall('청와대',-70,-354,34,18,8,true);hall(null,-99,-354,18,15,6,true);hall(null,-41,-354,18,15,6,true);cube(92,.07,18,-70,.05,-333,m.green);
+ // Walk-in Blue House shells are built by civic-world.js.cube(92,.07,18,-70,.05,-333,m.green);
  // Civic and cultural anchors north of the river.
  building('서울시청',-75,-171,42,20,20,m.glass);building('서울역',-193,-110,34,23,13,m.red);roof(40,27,-193,16,-110);building('DDP · 동대문',200,-275,40,24,13,m.metal);
  const towerBase=groundHeight(55,-100);const shaft=new T.Mesh(new T.CylinderGeometry(1.4,2,27,12),m.white);shaft.position.set(55,towerBase+13.5,-100);scene.add(shaft);const deck=new T.Mesh(new T.CylinderGeometry(7,5.5,6,16),m.glass);deck.position.set(55,towerBase+29,-100);scene.add(deck);const needle=new T.Mesh(new T.CylinderGeometry(.2,.6,23,8),m.white);needle.position.set(55,towerBase+43,-100);scene.add(needle);landmarks.push({name:'남산서울타워',x:55,z:-100});label('남산서울타워',55,90,-100,'#e8f5ef',27);

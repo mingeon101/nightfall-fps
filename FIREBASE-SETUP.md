@@ -47,3 +47,5 @@ V7: 적 300명 저장을 위해 defeatedEnemyIds 검증 상한을 15에서 299�
 V8: RPG는 inventory[4]에 저장됩니다. selected 검증 상한을 4로 변경하고 inventory의 $index 허용값에 문자열 4를 추가하세요. 구버전 4칸 저장은 읽을 때 RPG를 추가하여 이전합니다.
 
 V10: 적 1,000명의 진행 저장을 위해 defeatedEnemyIds 검증 상한을 999로 변경했습니다. 기존 규칙을 적용한 프로젝트는 이 값을 갱신해야 합니다.
+
+V12: 작전·새벽·민간인 사상 수·구금 진행은 civic 필드에 저장합니다. 갱신된 firebase-rules.fragment.json의 slot1.civic 규칙도 병합해야 합니다. 새 규칙을 적용하지 않으면 이전 $other 검증이 civic 저장을 거부합니다.
