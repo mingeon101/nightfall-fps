@@ -1,6 +1,6 @@
-import {SEOUL_AREAS,AIRPORTS} from './atlas-data.mjs?v=6';
-import {BRIDGES,HILLS,groundHeight,blockedAt,sampleRoute} from './core.mjs?v=6';
-import {signalState} from './city-sim.mjs?v=6';
+import {SEOUL_AREAS,AIRPORTS} from './atlas-data.mjs?v=8';
+import {BRIDGES,HILLS,groundHeight,blockedAt,sampleRoute} from './core.mjs?v=8';
+import {signalState} from './city-sim.mjs?v=8';
 export function buildMetropolitan(T,scene,world){
  const {m}=world,chunks=new Map(),facilities=[],signals=[],parks=[],anchors=[],ambientPlanes=[];let buildings=0,seed=63026;
  const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};

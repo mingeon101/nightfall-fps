@@ -1,4 +1,4 @@
-import {areaAt,AIRPORTS} from './atlas-data.mjs?v=6';
+import {areaAt,AIRPORTS} from './atlas-data.mjs?v=8';
 // Pure simulation rules shared by the game and its regression checks.
 export const LIMIT=3400;
 export const DISTRICTS=[
@@ -17,7 +17,8 @@ export const WEAPONS=[
  {id:'ar',name:'AR–41 돌격소총',mag:30,reserve:180,damage:35,interval:.12,reload:1.8,pellets:1,spread:.008,range:180,color:0x4e6454},
  {id:'smg',name:'V9 기관단총',mag:40,reserve:240,damage:23,interval:.075,reload:1.45,pellets:1,spread:.018,range:95,color:0x75849c},
  {id:'shotgun',name:'B12 산탄총',mag:8,reserve:48,damage:22,interval:.8,reload:2.3,pellets:8,spread:.055,range:45,color:0x936b43},
- {id:'sniper',name:'SR–7 저격소총',mag:5,reserve:30,damage:110,interval:1.1,reload:2.8,pellets:1,spread:.001,range:360,color:0x68704a}
+ {id:'sniper',name:'SR–7 저격소총',mag:5,reserve:30,damage:110,interval:1.1,reload:2.8,pellets:1,spread:.001,range:360,color:0x68704a},
+ {id:'rpg',name:'RPG 휴대용 미사일',mag:1,reserve:8,damage:700,interval:1,reload:3,pellets:1,spread:0,range:1400,projectile:true,color:0x657847}
 ];
 export const VEHICLE_TYPES={
  car:{name:'시민 차량',speed:25,accel:10,turn:1.6,radius:1.5,eye:1.5},
@@ -73,3 +74,5 @@ export function vehicleStep(v,controls,dt,blocks){
  if(spec.flying&&v.y<groundHeight(v.x,v.z)+.05&&groundHeight(v.x,v.z)>1){v.x=previousX;v.z=previousZ;if(spec.flying)v.y=Math.max(v.y,groundHeight(previousX,previousZ)+.2);collision=true}
  if(collision)v.speed=-previousSpeed*.08;return collision;
 }
+
+

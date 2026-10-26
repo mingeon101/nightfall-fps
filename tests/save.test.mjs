@@ -7,3 +7,5 @@ test('phone input is converted to E.164 without accepting arbitrary strings',()=
 test('local backups are user-scoped and revisions detect conflicts',()=>{assert.notEqual(localSaveKey('userA'),localSaveKey('userB'));assert.throws(()=>localSaveKey('../user'));assert(shouldWriteRevision(null,0));assert(shouldWriteRevision({revision:3},3));assert(!shouldWriteRevision({revision:4},3))});
 
 test('all 300 enemy IDs survive save normalization',()=>{const p=progress();p.defeatedEnemyIds=[0,15,16,288,299,300];assert.deepEqual(normalizeSave(p).defeatedEnemyIds,[0,15,16,288,299])});
+
+test('legacy four-slot saves acquire RPG while new RPG ammo is preserved',()=>{const old=normalizeSave(progress());assert.equal(old.inventory.length,5);assert.deepEqual(old.inventory[4],{owned:true,ammo:1,reserve:8});old.selected=4;old.inventory[4].ammo=0;old.inventory[4].reserve=3;const saved=normalizeSave(old);assert.equal(saved.selected,4);assert.equal(saved.inventory[4].ammo,0);assert.equal(saved.inventory[4].reserve,3)});

@@ -41,7 +41,7 @@ test('safe disembarking finds an alternate side or refuses when surrounded',()=>
  assert.equal(chooseExit(v,[{x:200,z:200,w:20,d:20,bottom:0,top:8}]),null);
 });
 test('weapon choices have distinct magazines, rates and ammunition budgets',()=>{
- assert.equal(new Set(WEAPONS.map(w=>w.mag)).size,4);assert(WEAPONS.every(w=>w.reserve>0&&w.reload>0));assert(WEAPONS[2].pellets>1);assert(WEAPONS[3].range>WEAPONS[0].range);
+ assert.equal(new Set(WEAPONS.map(w=>w.mag)).size,5);assert(WEAPONS.every(w=>w.reserve>0&&w.reload>0));assert(WEAPONS[2].pellets>1);assert(WEAPONS[3].range>WEAPONS[0].range);
 });
 
 test('Hangang navigation keeps cars on bridges without blocking bullets over water',()=>{

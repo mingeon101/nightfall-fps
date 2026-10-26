@@ -43,3 +43,5 @@ nightfallSaves/{Firebase Auth UID}/slot1
 공식 문서: [익명 로그인](https://firebase.google.com/docs/auth/web/anonymous-auth), [Google 로그인](https://firebase.google.com/docs/auth/web/google-signin), [전화번호 로그인](https://firebase.google.com/docs/auth/web/phone-auth), [RTDB 사용자별 규칙](https://firebase.google.com/docs/database/security/rules-conditions), [웹 SDK CDN](https://firebase.google.com/docs/web/alt-setup).
 
 V7: 적 300명 저장을 위해 defeatedEnemyIds 검증 상한을 15에서 299로 변경했습니다. 기존 규칙이 게시되어 있다면 이 값도 Firebase 콘솔에서 수정해야 합니다.
+
+V8: RPG는 inventory[4]에 저장됩니다. selected 검증 상한을 4로 변경하고 inventory의 $index 허용값에 문자열 4를 추가하세요. 구버전 4칸 저장은 읽을 때 RPG를 추가하여 이전합니다.

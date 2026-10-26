@@ -8,7 +8,7 @@
         "schemaVersion": { ".validate": "newData.val() === 1" },
         "worldVersion": { ".validate": "newData.val() === 6" },
         "playSeconds": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000000" },
-        "selected": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 3 && newData.val() % 1 === 0" },
+        "selected": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 4 && newData.val() % 1 === 0" },
         "revision": { ".validate": "newData.isNumber() && ((!data.exists() && newData.val() === 1) || (data.exists() && newData.val() === data.val() + 1))" },
         "updatedAt": { ".validate": "newData.isNumber() && newData.val() <= now" },
         "player": {
@@ -23,7 +23,7 @@
         "inventory": {
           ".validate": "newData.hasChildren(['0','1','2','3'])",
           "$index": {
-            ".validate": "($index === '0' || $index === '1' || $index === '2' || $index === '3') && newData.hasChildren(['owned','ammo','reserve'])",
+            ".validate": "($index === '0' || $index === '1' || $index === '2' || $index === '3' || $index === '4') && newData.hasChildren(['owned','ammo','reserve'])",
             "owned": { ".validate": "newData.isBoolean()" },
             "ammo": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 40" },
             "reserve": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100000" },
