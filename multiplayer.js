@@ -1,4 +1,4 @@
-import {ROOM_VERSION,roomCode,availableSlot,cleanPose,cleanShot,acceptShot} from './multiplayer-protocol.mjs?v=15';
+import {ROOM_VERSION,roomCode,availableSlot,cleanPose,cleanShot,acceptShot} from './multiplayer-protocol.mjs?v=16';
 export function installMultiplayer(bridge){
  const $=id=>document.getElementById(id);let session=null,busy=false,connected=false,connectionStop=null,ctx=null,clock=0,worldClock=0;
  const status=t=>$('mpstatus').textContent=t;
