@@ -1,4 +1,4 @@
-import {STATIONS,DISTRICTS,VEHICLE_TYPES,BRIDGES,HILLS,groundHeight} from './core.mjs?v=8';
+import {STATIONS,DISTRICTS,VEHICLE_TYPES,BRIDGES,HILLS,groundHeight} from './core.mjs?v=9';
 export function buildWorld(T,scene){
  const blocks=[],landmarks=[],vehicles=[],pickups=[],people=[],batches=new Map(),colliders=[];
  let seed=7101;const rand=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
@@ -51,7 +51,19 @@ export function buildWorld(T,scene){
  building('COEX · 코엑스',190,190,56,42,18,m.glass);building('무역센터',210,190,15,17,67,m.blue);
  building('롯데월드타워',300,290,23,24,105,m.glass);const crown=new T.Mesh(new T.ConeGeometry(12,24,4),m.glass);crown.rotation.y=Math.PI/4;crown.position.set(300,117,290);scene.add(crown);
  building('강남역 · 테헤란로',80,190,27,30,43,m.blue);building('도심 백화점',370,190,42,38,23,m.violet);
- building('63빌딩',-180,185,18,20,72,gold);building('국회의사당',-285,180,52,30,15,m.sand);const dome=new T.Mesh(new T.SphereGeometry(13,18,12,0,Math.PI*2,0,Math.PI/2),m.green);dome.position.set(-285,15,180);scene.add(dome);
+ building('63빌딩',-180,185,18,20,72,gold);// Fictional, simplified gameplay interior; this is not a real building floor plan.
+ const assembly={x:-285,z:180,front:195,back:165};landmarks.push({name:'국회의사당 · 내부 진입',x:-285,z:198});label('국회의사당 · 정문 / 내부 전투',-285,18,198,'#b8e5cf',31);
+ cube(52,.2,30,-285,-.12,180,m.sand);cube(53,.5,31,-285,15,180,m.sand,true);
+ for(const x of [-311,-259])cube(.6,15,30,x,7.5,180,m.sand,true);
+ for(const z of [165,195]){for(const x of [-300,-270])cube(22,15,.6,x,7.5,z,m.sand,true);cube(8,10,.6,-285,10,z,m.sand,true)}
+ // A straight central aisle connects the two unlocked entrances and the chamber.
+ for(const x of [-300,-270])cube(22,4,.35,x,2,185,m.white,true);
+ for(const x of [-302,-268]){cube(.35,4,8,x,2,190,m.white,true);cube(5,1,1.2,x+(x<-285?-4:4),.5,190,m.metal,true)}
+ for(const z of [171,176,181])for(const x of [-296,-290,-280,-274]){cube(3,1.05,1.2,x,.525,z,m.metal,true);cube(1,.5,.8,x,.25,z+1.3,m.blue);cube(1,.7,.15,x,.75,z+1.7,m.blue)}
+ cube(5,.8,2,-285,.4,168,m.sand,true);cube(1,1.3,.7,-285,.65,169,m.dark,true);
+ cube(9,2,.15,-285,3,165.5,m.blue);label('본회의장 · 중앙 통로',-285,3.5,183,'#e0e8cf',12);label('로비 · 정문 출구',-285,3,193,'#b9e8db',12);
+ for(const x of [-303,-285,-267]){const light=new T.PointLight(0xe0edff,18,24);light.position.set(x,6,181);scene.add(light);cube(3,.12,1,x,6.2,181,m.window)}
+ const dome=new T.Mesh(new T.SphereGeometry(13,18,12,0,Math.PI*2,0,Math.PI/2),m.green);dome.position.set(-285,15,180);scene.add(dome);
  building('서울 종합병원',370,-275,30,27,20,m.white);cube(3,9,.3,370,13,-261.4,m.red);cube(9,3,.3,370,13,-261.3,m.red);building('학교',285,-275,34,25,10,m.sand);building('경찰서',-190,280,30,25,12,m.blue);building('119 소방서',-285,380,30,24,10,m.red);
  // Fictional southwest training apron retains the previously added vehicles.
  cube(25,.08,205,-350,.08,240,m.road);for(let z=146;z<340;z+=16)cube(1,.1,7,-350,.15,z,m.white);building('훈련 격납고 · 가상 시설',-395,200,30,40,15,m.metal,false);
@@ -65,10 +77,10 @@ export function buildWorld(T,scene){
  tunnelSegment(STATIONS[0],STATIONS[1],-10,m.blue);for(let i=0;i<4;i++)tunnelSegment(STATIONS[i],STATIONS[(i+1)%4],-17,m.green);
  for(const s of STATIONS){cube(8,4,5,s.x,2,s.z+12,m.dark);cube(8.4,.4,5.4,s.x,4.2,s.z+12,s.lines.length===2?m.blue:m.green);label(`Ⓜ ${s.name} ${s.lines.join('·')}호선`,s.x,6.5,s.z+12,'#8acdec',19);cube(8,.1,8,s.x,.1,s.z+12,m.glass);landmarks.push({name:'Ⓜ '+s.name,x:s.x,z:s.z+12})}
  // Shared articulated humanoid rigs, with shoulder and hip pivots.
- function person(x,z,enemy=false,index=0){const root=new T.Group(),body=new T.Group();root.position.set(x,0,z);root.add(body);scene.add(root);const cloth=enemy?m.sand:[m.blue,m.red,m.violet,m.white][index%4],skin=mat(0xb39a7a);cube(.58,.65,.32,0,1.15,0,cloth,false,body);cube(.32,.32,.30,0,1.69,0,skin,false,body);if(enemy){cube(.4,.17,.37,0,1.87,0,m.dark,false,body);cube(.48,.46,.39,0,1.17,-.02,m.metal,false,body)}
+ function person(x,z,enemy=false,index=0,ally=false){const root=new T.Group(),body=new T.Group();root.position.set(x,0,z);root.add(body);scene.add(root);const cloth=ally?m.blue:enemy?m.sand:[m.blue,m.red,m.violet,m.white][index%4],skin=mat(0xb39a7a);cube(.58,.65,.32,0,1.15,0,cloth,false,body);cube(.32,.32,.30,0,1.69,0,skin,false,body);if(enemy||ally){cube(.4,.17,.37,0,1.87,0,m.dark,false,body);cube(.48,.46,.39,0,1.17,-.02,m.metal,false,body)}
   const legs=[],arms=[];for(const side of [-1,1]){const hip=new T.Group();hip.position.set(side*.17,.85,0);body.add(hip);cube(.22,.8,.24,0,-.4,0,cloth,false,hip);cube(.24,.14,.36,0,-.78,-.05,m.black,false,hip);legs.push(hip);const shoulder=new T.Group();shoulder.position.set(side*.4,1.42,0);body.add(shoulder);cube(.19,.58,.22,0,-.28,0,cloth,false,shoulder);arms.push(shoulder)}
-  let weapon=null,muzzle=null,mag=null;if(enemy){weapon=new T.Group();weapon.position.set(0,-.38,-.28);arms[1].add(weapon);cube(.13,.15,.5,0,0,0,m.black,false,weapon);cube(.06,.06,.4,0,.01,-.42,m.black,false,weapon);mag=cube(.08,.22,.13,0,-.16,.02,m.dark,false,weapon);muzzle=new T.Mesh(new T.ConeGeometry(.12,.35,5),new T.MeshBasicMaterial({color:0xffd887}));muzzle.rotation.x=-Math.PI/2;muzzle.position.set(0,.01,-.72);muzzle.visible=false;weapon.add(muzzle)}
-  const p={root,body,legs,arms,weapon,muzzle,mag,enemy,hp:100,ammo:8,reloading:0,cool:1+rand()*2,recoil:0,death:0,phase:rand()*6,origin:{x,z},target:{x:x+12,z},flee:0};root.userData.actor=p;people.push(p);return p;
+  let weapon=null,muzzle=null,mag=null;if(enemy||ally){weapon=new T.Group();weapon.position.set(0,-.38,-.28);arms[1].add(weapon);cube(.13,.15,.5,0,0,0,m.black,false,weapon);cube(.06,.06,.4,0,.01,-.42,m.black,false,weapon);mag=cube(.08,.22,.13,0,-.16,.02,m.dark,false,weapon);muzzle=new T.Mesh(new T.ConeGeometry(.12,.35,5),new T.MeshBasicMaterial({color:0xffd887}));muzzle.rotation.x=-Math.PI/2;muzzle.position.set(0,.01,-.72);muzzle.visible=false;weapon.add(muzzle)}
+  const p={root,body,legs,arms,weapon,muzzle,mag,enemy,ally,hp:100,ammo:8,reloading:0,cool:1+rand()*2,recoil:0,death:0,phase:rand()*6,origin:{x,z},target:{x:x+12,z},flee:0};root.userData.actor=p;people.push(p);return p;
  }
  // Combat cells keep the large city populated without attacking across districts.
  for(const d of DISTRICTS)for(const [dx,dz]of [[-9,-88],[8,-25],[-7,35],[8,90]]){const x=(d.x<0?-240:240)+dx,z=(d.z<0?-240:240)+dz;person(x,z,true)}
