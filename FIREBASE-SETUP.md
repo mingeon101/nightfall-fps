@@ -51,3 +51,5 @@ V10: 적 1,000명의 진행 저장을 위해 defeatedEnemyIds 검증 상한을 9
 V12: 작전·새벽·민간인 사상 수·구금 진행은 civic 필드에 저장합니다. 갱신된 firebase-rules.fragment.json의 slot1.civic 규칙도 병합해야 합니다. 새 규칙을 적용하지 않으면 이전 $other 검증이 civic 저장을 거부합니다.
 
 V13: 4인 협동전은 nightfallRooms 경로를 사용합니다. 통합 규칙 파일에 포함했으며 [MULTIPLAYER-SETUP.md](MULTIPLAYER-SETUP.md)의 서버 설정을 먼저 적용해야 합니다.
+
+V14: 열추적 미사일·플레어를 포함한 협동전 방 버전 14를 지원하려면 nightfallRooms 규칙을 최신 버전으로 갱신하세요.
