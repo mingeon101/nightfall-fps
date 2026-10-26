@@ -1,5 +1,5 @@
-import {STATIONS,routeLength,blockedAt,groundHeight,BRIDGES} from './core.mjs?v=17';
-import {BUS_STOPS,BUS_ROUTE} from './transport.mjs?v=17';
+import {STATIONS,routeLength,blockedAt,groundHeight,BRIDGES} from './core.mjs?v=18';
+import {BUS_STOPS,BUS_ROUTE} from './transport.mjs?v=18';
 export function configureRegionalTransit(anchors,blocks=[]){
  if(STATIONS.some(s=>s.regional))return;
  for(const s of STATIONS)if(!s.lines.includes(3))s.lines.push(3);

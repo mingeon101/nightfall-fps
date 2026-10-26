@@ -1,19 +1,19 @@
-import {frameCounter} from './performance-metrics.mjs?v=17';
-import {interestRows,simulationNearby,simulationDue,angleStep} from './network-performance.mjs?v=17';
-import {buildAirWeapons} from './air-weapons.js?v=17';
-import {installMultiplayer} from './multiplayer.js?v=17';
-import {buildCivic} from './civic-world.js?v=17';
-import {ENEMY_COUNT,ALLY_COUNT,CombatIndex,patrolOffset,aiInterval} from './combat-sim.mjs?v=17';
-import {installMobileControls} from './mobile-controls.js?v=17';
-import {normalizeSave} from './save-data.mjs?v=17';
-import {buildMetropolitan} from './metropolitan.js?v=17';
-import {configureRegionalTransit} from './regional-transit.mjs?v=17';
-import {stepTraffic,SHOP_ITEMS,purchaseItem} from './city-sim.mjs?v=17';
-import {SEOUL_AREAS,AIRPORTS} from './atlas-data.mjs?v=17';
-import {buildTransport,slideDoors} from './transit-world.js?v=17';
-import {BUS_STOPS,PLATFORM_PHASES,createMetroJourney,stepMetro,boardMetro,alightMetro,createBusService,requestBus,busRemaining,stepBus,boardBus,alightBus,busPosition} from './transport.mjs?v=17';
-import {buildWorld} from './world.js?v=17';
-import {DISTRICTS,STATIONS,WEAPONS,VEHICLE_TYPES,clamp,groundHeight,districtAt,blockedAt,moveBody,lineBlocked,damageVitals,routeLength,sampleRoute,transitRoute,chooseExit,vehicleStep,BRIDGES,HILLS} from './core.mjs?v=17';
+import {frameCounter} from './performance-metrics.mjs?v=18';
+import {interestRows,simulationNearby,simulationDue,angleStep} from './network-performance.mjs?v=18';
+import {buildAirWeapons} from './air-weapons.js?v=18';
+import {installMultiplayer} from './multiplayer.js?v=18';
+import {buildCivic} from './civic-world.js?v=18';
+import {ENEMY_COUNT,ALLY_COUNT,CombatIndex,patrolOffset,aiInterval} from './combat-sim.mjs?v=18';
+import {installMobileControls} from './mobile-controls.js?v=18';
+import {normalizeSave} from './save-data.mjs?v=18';
+import {buildMetropolitan} from './metropolitan.js?v=18';
+import {configureRegionalTransit} from './regional-transit.mjs?v=18';
+import {stepTraffic,SHOP_ITEMS,purchaseItem} from './city-sim.mjs?v=18';
+import {SEOUL_AREAS,AIRPORTS} from './atlas-data.mjs?v=18';
+import {buildTransport,slideDoors} from './transit-world.js?v=18';
+import {BUS_STOPS,PLATFORM_PHASES,createMetroJourney,stepMetro,boardMetro,alightMetro,createBusService,requestBus,busRemaining,stepBus,boardBus,alightBus,busPosition} from './transport.mjs?v=18';
+import {buildWorld} from './world.js?v=18';
+import {DISTRICTS,STATIONS,WEAPONS,VEHICLE_TYPES,clamp,groundHeight,districtAt,blockedAt,moveBody,lineBlocked,damageVitals,routeLength,sampleRoute,transitRoute,chooseExit,vehicleStep,BRIDGES,HILLS} from './core.mjs?v=18';
 const $=id=>document.getElementById(id);
 let multiplayer=null,soloBackup=null,networkWorld=null,vehicleClaimPending=false;const networkPeers=new Map(),networkFires=new Map(),networkActors=new Set();let networkClaims={};
 const inRoom=()=>multiplayer?.session;
@@ -34,7 +34,7 @@ const camera=new T.PerspectiveCamera(75,innerWidth/innerHeight,.08,7000);camera.
 scene.add(new T.HemisphereLight(0xaecce7,0x3e4e3c,2.1));const sun=new T.DirectionalLight(0xffe3b8,2.6);sun.position.set(-170,250,-80);scene.add(sun);
 const world=buildWorld(T,scene),{blocks,people,vehicles,pickups,trains,m}=world;
 const metropolis=buildMetropolitan(T,scene,world);configureRegionalTransit(metropolis.anchors,blocks);
-const civic=buildCivic(T,scene,world,metropolis,{message,tracer,damage,animate:animatePerson,riding:()=>!!currentVehicle,armed:()=>inventory.some(it=>it.owned&&it.ammo>0),disarm(){inventory.forEach(it=>Object.assign(it,{owned:false,ammo:0,reserve:0}));selected=0;shooting=false;aim=false},arm(){Object.assign(inventory[0],{owned:true,ammo:30,reserve:90});selected=0;updateHud()},warp(pos){if(currentVehicle){if(inRoom())multiplayer.release(vehicles.indexOf(currentVehicle)).catch(()=>{});currentVehicle.occupied=false;currentVehicle=null}trip=null;busRide=null;Object.assign(player,pos,{vy:0,grounded:true});camera.position.set(player.x,player.y+1.7,player.z);shooting=false;keys.clear()}});
+const civic=buildCivic(T,scene,world,metropolis,{message,tracer,damage,animate:animatePerson,securityTargets:()=>[{x:player.x,y:player.y,z:player.z,hp:player.health,active},...Array.from(networkPeers,([uid,e])=>({...e.pose,uid}))],securityHurt:(target,amount)=>target.uid?multiplayer?.damagePeer(target.uid,amount):damage(amount),riding:()=>!!currentVehicle,armed:()=>inventory.some(it=>it.owned&&it.ammo>0),disarm(){inventory.forEach(it=>Object.assign(it,{owned:false,ammo:0,reserve:0}));selected=0;shooting=false;aim=false},arm(){Object.assign(inventory[0],{owned:true,ammo:30,reserve:90});selected=0;updateHud()},warp(pos){if(currentVehicle){if(inRoom())multiplayer.release(vehicles.indexOf(currentVehicle)).catch(()=>{});currentVehicle.occupied=false;currentVehicle=null}trip=null;busRide=null;Object.assign(player,pos,{vy:0,grounded:true});camera.position.set(player.x,player.y+1.7,player.z);shooting=false;keys.clear()}});
 // Preserve the original sixteen enemy IDs for existing saves.
 for(let i=16;i<ENEMY_COUNT;i++){const a=metropolis.anchors[(i-16)%metropolis.anchors.length],pos=metropolis.safeSpawn({x:a.x+(Math.floor((i-16)/metropolis.anchors.length)%3-1)*18,z:a.z+24+Math.floor((i-16)/metropolis.anchors.length)*8});world.person(pos.x,pos.z,true,i)}
 const hostileVehicles=[];let nextHostileLaunch=60;
@@ -203,7 +203,7 @@ function showShop(f){openCityMenu(f.name);$('citydescription').textContent='잔�
 function requestPlay(){if(ended)return;try{if(!mobileMode){const p=$('game').requestPointerLock();p?.catch(()=>message('마우스 잠금 제한 · 방향키로 시점 조작 가능'))}}catch{}active=true;started=true;$('menu').hidden=true;$('pause').hidden=true;$('hud').hidden=false;$('foot').hidden=true;sound('start');updateHud()}
 function pause(){if(!active)return;active=false;touchControls?.reset();shooting=false;aim=false;keys.clear();$('pause').hidden=false;document.exitPointerLock?.()}
 function finish(){active=false;ended=true;shooting=false;aim=false;keys.clear();document.exitPointerLock?.();$('hud').hidden=true;$('pause').hidden=true;$('result').hidden=false;$('resulttag').textContent='SIGNAL LOST';$('resulttitle').textContent='작전 실패';$('resultbody').textContent=`적 ${kills} / ${enemies.length} 제압 · 방탄복과 구급상자를 확보해 재도전하세요.`}
-function reset(resume=true){airWeapons.reset();civic.reset();Object.assign(player,{x:220,z:-115,y:0,vy:0,health:100,armor:0,grounded:true});wallet=50000;$('citypanel').hidden=true;active=false;ended=false;kills=0;elapsed=0;lastDamage=-99;currentVehicle=null;trip=null;stationMenu=null;busRide=null;waitingStop=null;waitClock=0;servedStop=null;for(const bus of transport.buses){bus.service=createBusService(bus.service.home);bus.root.visible=false;slideDoors(bus,0)}for(const p of transport.platforms.values())slideDoors(p,0);for(const train of trains){train.distance=0;slideDoors(train,0)}reload=0;fireCooldown=0;recoil=0;hit=0;hurt=0;aim=false;shooting=false;yaw=0;pitch=0;keys.clear();inventory.forEach((it,i)=>Object.assign(it,{owned:i===0||i===4,ammo:WEAPONS[i].mag,reserve:WEAPONS[i].reserve}));people.forEach(p=>{p.root.position.set(p.origin.x,0,p.origin.z);p.body.rotation.set(0,0,0);p.body.position.y=0;p.hp=100;p.aiElapsed=-(p.phase%1)*.35;p.death=0;p.reloading=0;p.ammo=8;p.cool=1+world.rand();p.flee=0;if(p.muzzle)p.muzzle.visible=false});vehicles.forEach(v=>{Object.assign(v,v.origin,{speed:0,y:0,occupied:false,destroyed:false,trafficOffset:v.origin.trafficOffset??vehicles.indexOf(v)*71});v.root.position.set(v.x,0,v.z);v.root.rotation.y=v.yaw});resetHostileVehicles();for(const a of allies){a.vehicle=null;a.cool=1;a.aiElapsed=-(a.patrolId%8)*.05;a.patrolLeg=0;a.patrolAt=0;a.patrolPoint=null;a.assignedVehicle=a.driver?alliedVehicles[allies.indexOf(a)]:null}for(const v of vehicles)v.allyPilot=null;refreshCombatIndices(0,true);for(const r of rockets){scene.remove(r.mesh);r.mesh.geometry.dispose();r.mesh.material.dispose()}rockets.length=0;vehicles.forEach(v=>v.hp=650);pickups.forEach(p=>{p.respawn=0;p.root.visible=true});for(const e of effects){scene.remove(e.line);e.line.geometry.dispose();e.line.material.dispose()}effects.length=0;$('result').hidden=true;$('transit').hidden=true;$('radio').textContent='아군 50명 자율 작전 · G 지역 이동 → 국회의사당 내부 · M 지도';equip(0);message('강북 성수 방면에서 시작합니다 · 근처 보급품을 확보하세요.',6);if(resume)requestPlay()}
+function reset(resume=true){airWeapons.reset();civic.reset();Object.assign(player,{x:220,z:-115,y:0,vy:0,health:100,armor:0,grounded:true});wallet=50000;$('citypanel').hidden=true;active=false;ended=false;kills=0;elapsed=0;lastDamage=-99;currentVehicle=null;trip=null;stationMenu=null;busRide=null;waitingStop=null;waitClock=0;servedStop=null;for(const bus of transport.buses){bus.service=createBusService(bus.service.home);bus.root.visible=false;slideDoors(bus,0)}for(const p of transport.platforms.values())slideDoors(p,0);for(const train of trains){train.distance=0;slideDoors(train,0)}reload=0;fireCooldown=0;recoil=0;hit=0;hurt=0;aim=false;shooting=false;yaw=0;pitch=0;keys.clear();inventory.forEach((it,i)=>Object.assign(it,{owned:i===0||i===4,ammo:WEAPONS[i].mag,reserve:WEAPONS[i].reserve}));people.forEach(p=>{p.root.position.set(p.origin.x,0,p.origin.z);p.body.rotation.set(0,0,0);p.body.position.y=0;p.hp=p.role==='security'?180:100;p.aiElapsed=-(p.phase%1)*.35;p.death=0;p.reloading=0;p.ammo=p.role==='security'?24:8;p.cool=1+world.rand();p.flee=0;if(p.muzzle)p.muzzle.visible=false});vehicles.forEach(v=>{Object.assign(v,v.origin,{speed:0,y:0,occupied:false,destroyed:false,trafficOffset:v.origin.trafficOffset??vehicles.indexOf(v)*71});v.root.position.set(v.x,0,v.z);v.root.rotation.y=v.yaw});resetHostileVehicles();for(const a of allies){a.vehicle=null;a.cool=1;a.aiElapsed=-(a.patrolId%8)*.05;a.patrolLeg=0;a.patrolAt=0;a.patrolPoint=null;a.assignedVehicle=a.driver?alliedVehicles[allies.indexOf(a)]:null}for(const v of vehicles)v.allyPilot=null;refreshCombatIndices(0,true);for(const r of rockets){scene.remove(r.mesh);r.mesh.geometry.dispose();r.mesh.material.dispose()}rockets.length=0;vehicles.forEach(v=>v.hp=650);pickups.forEach(p=>{p.respawn=0;p.root.visible=true});for(const e of effects){scene.remove(e.line);e.line.geometry.dispose();e.line.material.dispose()}effects.length=0;$('result').hidden=true;$('transit').hidden=true;$('radio').textContent='아군 50명 자율 작전 · G 지역 이동 → 국회의사당 내부 · M 지도';equip(0);message('강북 성수 방면에서 시작합니다 · 근처 보급품을 확보하세요.',6);if(resume)requestPlay()}
 $('cityclose').onclick=closeCityMenu;
 $('start').onclick=()=>{message('E · 근처 방탄복과 무기를 획득하세요.',6);requestPlay()};$('resume').onclick=requestPlay;$('restart').onclick=()=>inRoom()?respawnNetwork():reset();$('canceltransit').onclick=()=>{stationMenu=null;$('transit').hidden=true;requestPlay()};
 document.addEventListener('pointerlockchange',()=>{if(document.pointerLockElement!==$('game')&&active)pause()});
@@ -242,6 +242,7 @@ const networkBridge={
  hurt:damage
 };
 
+civic.installSecurity();
 touchControls=installMobileControls({active:()=>active,move(x,y){mobileMotion.strafe=x;mobileMotion.forward=y},look(dx,dy){if(!active)return;yaw-=dx*(aim?.002:.004);pitch=clamp(pitch-dy*(aim?.002:.004),-1.2,1.2)},action:mobileAction,enabled(value){mobileMode=value;renderer.setPixelRatio(value?1:Math.min(devicePixelRatio,1.5));camera.far=value?2400:7000;camera.updateProjectionMatrix()}});
 window.nightfallGameBridge={isActive:()=>active,canSave:()=>started&&!ended&&!inRoom(),multiplayerActive:()=>!!inRoom(),serialize:serializeProgress,restore:restoreProgress,pause,resume:requestPlay};multiplayer=installMultiplayer(networkBridge);if(window.dispatchEvent)window.dispatchEvent(new Event('nightfall-ready'));
 
