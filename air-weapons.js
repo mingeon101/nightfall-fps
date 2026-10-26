@@ -1,5 +1,5 @@
-import {resetAirWeapons,selectHeatTarget,makeHeatMissile,makeFlare,stepHeatMissile} from './air-combat.mjs?v=16';
-import {lineBlocked,groundHeight} from './core.mjs?v=16';
+import {resetAirWeapons,selectHeatTarget,makeHeatMissile,makeFlare,stepHeatMissile} from './air-combat.mjs?v=17';
+import {lineBlocked,groundHeight} from './core.mjs?v=17';
 export function buildAirWeapons(T,scene,world,api){const missiles=[],flares=[],meshes=new Map(),racks=new Map();let nextId=1;const aircraft=v=>['fighter','helicopter','plane','airliner'].includes(v.type);
  for(const v of world.vehicles)if(v.type==='fighter'){const mounts=[];for(let i=0;i<4;i++){const root=new T.Group();root.position.set((i%2?1:-1)*(i<2?2.8:4.2),1.1,.3);v.root.add(root);world.cube(.18,.18,1.8,0,0,0,world.m.white,false,root);const tip=new T.Mesh(new T.ConeGeometry(.13,.6,7),world.m.white);tip.rotation.x=-Math.PI/2;tip.position.z=-1.2;root.add(tip);mounts.push(root)}racks.set(v,mounts)}
  function target(v){return selectHeatTarget(v,world.vehicles.filter(aircraft),other=>v.hostile?!other.hostile:other.hostile,(a,b)=>!lineBlocked({x:a.x,y:a.y+2,z:a.z},{x:b.x,y:b.y+2,z:b.z},world.blocks))}

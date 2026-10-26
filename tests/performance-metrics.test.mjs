@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {frameCounter,latencyLabel} from '../performance-metrics.mjs';
+test('FPS uses real frame time, including long frames rather than clamped game time',()=>{const fps=frameCounter();assert.equal(fps.sample(0),null);let measured;for(let i=1;i<=30;i++)measured=fps.sample(i*1000/60);assert.equal(measured,60);assert.equal(fps.sample(1500),1)});
+test('hidden tabs restart the frame measurement window',()=>{const fps=frameCounter();fps.sample(0);fps.sample(500,true);assert.equal(fps.sample(10000),null);assert.equal(fps.sample(10500),2)});
+test('ping starts unmeasured and shows pending acknowledgements instead of stale good ping',()=>{assert.equal(latencyLabel(undefined,null,5000),'측정 중');assert.equal(latencyLabel(123.4,null,5000),'123 ms');assert.equal(latencyLabel(40,1000,3500),'2500+ ms');assert.equal(latencyLabel(-2,null,5000),'0 ms')});
