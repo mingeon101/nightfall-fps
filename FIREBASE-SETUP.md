@@ -53,3 +53,5 @@ V12: 작전·새벽·민간인 사상 수·구금 진행은 civic 필드에 저�
 V13: 4인 협동전은 nightfallRooms 경로를 사용합니다. 통합 규칙 파일에 포함했으며 [MULTIPLAYER-SETUP.md](MULTIPLAYER-SETUP.md)의 서버 설정을 먼저 적용해야 합니다.
 
 V14: 열추적 미사일·플레어를 포함한 협동전 방 버전 14를 지원하려면 nightfallRooms 규칙을 최신 버전으로 갱신하세요.
+
+V20 필수 갱신: 전체 규칙 파일 firebase-database.rules.json에 개인 저장 HP 상한 500, 멀티 HP 상한 500, 방 버전 20을 반영했습니다. Realtime Database → 규칙에서 적용하세요. 기존에 같은 DB를 쓰는 다른 앱의 규칙이 있다면 해당 경로를 유지해 병합합니다. 게임 배포는 Firebase 규칙 게시를 대신하지 않습니다.

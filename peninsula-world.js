@@ -1,5 +1,5 @@
-import {PENINSULA_CITIES,RAIL_NODES,PENINSULA_RAIL,KOREA_COAST,projectKorea,railwayRoute,journeyPosition,peninsulaLandAt} from './peninsula-data.mjs?v=19';
-import {moveBody,blockedAt} from './core.mjs?v=19';
+import {PENINSULA_CITIES,RAIL_NODES,PENINSULA_RAIL,KOREA_COAST,projectKorea,railwayRoute,journeyPosition,peninsulaLandAt} from './peninsula-data.mjs?v=20';
+import {moveBody,blockedAt} from './core.mjs?v=20';
 export function buildPeninsula(T,api){
  const scene=new T.Scene();scene.background=new T.Color(0xa3c9dc);scene.fog=new T.FogExp2(0xa3c9dc,.0004);scene.add(new T.HemisphereLight(0xc9ebff,0x4f6548,2.6));const sun=new T.DirectionalLight(0xffedd1,3);sun.position.set(-200,500,100);scene.add(sun);
  const camera=new T.PerspectiveCamera(75,innerWidth/innerHeight,.08,7500),blocks=[],cityRoots=[],pedestrians=[];camera.rotation.order='YXZ';let built=false,active=false,city=PENINSULA_CITIES[0],fantasy=false,journey=null,flight=false,expanded=true,time=0,mapClock=0,vy=0,grounded=true;
