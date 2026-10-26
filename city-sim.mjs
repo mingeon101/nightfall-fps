@@ -1,5 +1,5 @@
-import {PLAYER_MAX_HEALTH} from './player-rules.mjs?v=20';
-import {routeLength,sampleRoute,clamp} from './core.mjs?v=20';
+import {PLAYER_MAX_HEALTH} from './player-rules.mjs?v=21';
+import {routeLength,sampleRoute,clamp} from './core.mjs?v=21';
 export function signalState(time,axis='EW',offset=0){const phase=((time+offset)%28+28)%28,local=(phase+(axis==='NS'?14:0))%28;return local<10?'green':local<12?'amber':'red'}
 export function pedestrianSignal(time,axis,offset=0){return signalState(time,axis==='EW'?'NS':'EW',offset)==='green'}
 export function routeSegment(route,distance){let d=((distance%routeLength(route))+routeLength(route))%routeLength(route),start=0;for(let i=1;i<route.length;i++){const length=Math.hypot(route[i].x-route[i-1].x,route[i].z-route[i-1].z);if(d<length||i===route.length-1)return {a:route[i-1],b:route[i],remaining:length-d,start,length,axis:Math.abs(route[i].x-route[i-1].x)>1?'EW':'NS'};d-=length;start+=length}}

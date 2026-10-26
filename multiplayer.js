@@ -1,5 +1,5 @@
-import {latencyLabel} from './performance-metrics.mjs?v=20';
-import {ROOM_VERSION,roomCode,availableSlot,cleanPose,cleanShot,acceptShot} from './multiplayer-protocol.mjs?v=20';
+import {latencyLabel} from './performance-metrics.mjs?v=21';
+import {ROOM_VERSION,roomCode,availableSlot,cleanPose,cleanShot,acceptShot} from './multiplayer-protocol.mjs?v=21';
 export function installMultiplayer(bridge){
  const $=id=>document.getElementById(id);let session=null,busy=false,connected=false,connectionStop=null,ctx=null,clock=0,worldClock=0;
  const monotonic=()=>typeof performance!=='undefined'?performance.now():Date.now();
