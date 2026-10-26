@@ -36,3 +36,5 @@ nightfallRooms/{방코드}/meta, slots, players, inputs, claims, damage, world�
 검증: 자동 검사 41개, 모의 RTDB 여러 접속자에서 생성/참가/4명 정원/동일 계정 거부/사격 중복 방지/차량 경쟁/세계 전송/피해/퇴장/방장 종료를 확인했습니다. 게임 통합 검사로 방장 사격 처리, 참가자 AI·피해 중복 방지, 아바타가 NPC ID를 바꾸지 않는 점, 개인 저장 잠금·본인 부활·싱글 복원을 확인했습니다. 규칙 표현식 검사도 실행했지만 Firebase Rules Emulator 검증을 대체하지 않습니다.
 
 공식 문서: [실시간 데이터 읽기·쓰기와 트랜잭션](https://firebase.google.com/docs/database/web/read-and-write), [접속 상태와 onDisconnect](https://firebase.google.com/docs/database/web/offline-capabilities).
+
+V15 전송 최적화: 월드 응답 대기와 이동·사격 전송을 분리하고 각 경로의 진행 중 요청을 제한했습니다. 변경 없는 위치는 1초 간격 확인만 보내고, 차량은 변경된 행만 RTDB update로 기록합니다. 공유 좌표는 소수 둘째 자리로 줄이며 관심 범위 밖 NPC의 오래된 표시를 제거합니다. 기존 V14 데이터 구조 및 Firebase 규칙과 호환됩니다. 실제 회선 지연을 측정한 결과는 아닙니다.
