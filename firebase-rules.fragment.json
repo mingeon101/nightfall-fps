@@ -127,6 +127,36 @@
               ".validate": false
             }
           }
+        },
+        "operation": {
+          ".validate": "newData.hasChildren(['phase','alarm','leg','leader'])",
+          "phase": {
+            ".validate": "newData.isNumber() && (newData.val() === 0 || newData.val() === 1 || newData.val() === 2 || newData.val() === 3)"
+          },
+          "alarm": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 30"
+          },
+          "leg": {
+            ".validate": "newData.isNumber() && (newData.val() === 0 || newData.val() === 1 || newData.val() === 2 || newData.val() === 3 || newData.val() === 4 || newData.val() === 5)"
+          },
+          "leader": {
+            ".validate": "newData.hasChildren(['x','z','hp'])",
+            "x": {
+              ".validate": "newData.isNumber() && newData.val() >= -7300 && newData.val() <= -6900"
+            },
+            "z": {
+              ".validate": "newData.isNumber() && newData.val() >= -14700 && newData.val() <= -14200"
+            },
+            "hp": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 250"
+            },
+            "$other": {
+              ".validate": false
+            }
+          },
+          "$other": {
+            ".validate": false
+          }
         }
       },
       "$other": {
@@ -138,7 +168,7 @@
     ".read": false,
     "$room": {
       ".read": "auth != null",
-      ".write": "auth != null && ((!data.exists() && $room.matches(/^[A-Z2-9]{6}$/) && newData.child('meta/host').val() === auth.uid && newData.child('meta/version').val() === 26 && newData.child('slots/0').val() === auth.uid) || (!newData.exists() && data.child('meta/host').val() === auth.uid))",
+      ".write": "auth != null && ((!data.exists() && $room.matches(/^[A-Z2-9]{6}$/) && newData.child('meta/host').val() === auth.uid && newData.child('meta/version').val() === 27 && newData.child('slots/0').val() === auth.uid) || (!newData.exists() && data.child('meta/host').val() === auth.uid))",
       ".validate": "newData.hasChildren(['meta','slots'])",
       "meta": {
         ".validate": "newData.hasChildren(['host','version','createdAt'])",
@@ -146,7 +176,7 @@
           ".validate": "newData.isString() && newData.val().length <= 128"
         },
         "version": {
-          ".validate": "newData.val() === 26"
+          ".validate": "newData.val() === 27"
         },
         "createdAt": {
           ".validate": "newData.isNumber() && newData.val() <= now"
@@ -158,7 +188,7 @@
       "slots": {
         ".validate": "newData.hasChildren()",
         "$slot": {
-          ".write": "auth != null && $slot.matches(/^[0-3]$/) && ((!newData.exists() && data.val() === auth.uid) || (newData.val() === auth.uid && (!data.exists() || data.val() === auth.uid) && root.child('nightfallRooms').child($room).child('meta/version').val() === 26 && root.child('nightfallRooms').child($room).child('slots/0').exists() && ($slot !== '0' || root.child('nightfallRooms').child($room).child('meta/host').val() === auth.uid)))",
+          ".write": "auth != null && $slot.matches(/^[0-3]$/) && ((!newData.exists() && data.val() === auth.uid) || (newData.val() === auth.uid && (!data.exists() || data.val() === auth.uid) && root.child('nightfallRooms').child($room).child('meta/version').val() === 27 && root.child('nightfallRooms').child($room).child('slots/0').exists() && ($slot !== '0' || root.child('nightfallRooms').child($room).child('meta/host').val() === auth.uid)))",
           ".validate": "$slot.matches(/^[0-3]$/) && newData.isString() && newData.val().length <= 128"
         }
       },
@@ -268,7 +298,7 @@
               ".validate": "newData.isString() && newData.val().matches(/^(shot|heat|flare|use|drone)$/)"
             },
             "action": {
-              ".validate": "newData.isString() && newData.val().matches(/^(stash|capture|deploy|control|fire|return)$/)"
+              ".validate": "newData.isString() && newData.val().matches(/^(stash|capture|pyongyang|deploy|control|fire|return)$/)"
             },
             "city": {
               ".validate": "newData.isString() && newData.val().matches(/^(legacy|seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason)$/)"
@@ -313,7 +343,7 @@
         ".write": "auth != null && root.child('nightfallRooms').child($room).child('meta/host').val() === auth.uid",
         ".validate": "newData.hasChildren(['version','t','active','vehicles','chief','dawn','updatedAt'])",
         "version": {
-          ".validate": "newData.val() === 26"
+          ".validate": "newData.val() === 27"
         },
         "t": {
           ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000000"
@@ -394,7 +424,34 @@
           ".validate": "newData.isString() && newData.val().matches(/^(seoul|peninsula)$/)"
         },
         "operation": {
-          ".validate": "newData.isBoolean()"
+          ".validate": "newData.hasChildren(['phase','alarm','leg','leader'])",
+          "phase": {
+            ".validate": "newData.isNumber() && (newData.val() === 0 || newData.val() === 1 || newData.val() === 2 || newData.val() === 3)"
+          },
+          "alarm": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 30"
+          },
+          "leg": {
+            ".validate": "newData.isNumber() && (newData.val() === 0 || newData.val() === 1 || newData.val() === 2 || newData.val() === 3 || newData.val() === 4 || newData.val() === 5)"
+          },
+          "leader": {
+            ".validate": "newData.hasChildren(['x','z','hp'])",
+            "x": {
+              ".validate": "newData.isNumber() && newData.val() >= -7300 && newData.val() <= -6900"
+            },
+            "z": {
+              ".validate": "newData.isNumber() && newData.val() >= -14700 && newData.val() <= -14200"
+            },
+            "hp": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 250"
+            },
+            "$other": {
+              ".validate": false
+            }
+          },
+          "$other": {
+            ".validate": false
+          }
         },
         "civic": {
           ".validate": "newData.hasChildren(['law'])",
@@ -446,7 +503,7 @@
           "$city": {
             ".validate": "$city.matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason)$/) && newData.hasChildren(['t','active','vehicles','chief','dawn','cityId']) && newData.child('cityId').val() === $city",
             "version": {
-              ".validate": "newData.val() === 26"
+              ".validate": "newData.val() === 27"
             },
             "t": {
               ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000000"

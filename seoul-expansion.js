@@ -1,6 +1,6 @@
-import {EXPANDED_CITIES,expansionConnections,expandedCityAt} from './seoul-expansion-data.mjs?v=26';
-import {citySpec} from './city-map-data.mjs?v=26';
-import {sampleRoute} from './core.mjs?v=26';
+import {EXPANDED_CITIES,expansionConnections,expandedCityAt} from './seoul-expansion-data.mjs?v=27';
+import {citySpec} from './city-map-data.mjs?v=27';
+import {sampleRoute} from './core.mjs?v=27';
 export function extendSeoul(T,scene,world,tools){const {part,building,terminal,anchors,facilities,roofSurfaces,signals,lampMat}=tools,{m}=world,regions=[],labels=[],connections=expansionConnections();
  part(80000,.1,80000,0,-.55,0,m.ground);
  const label=(text,x,y,z,size=30)=>{const mesh=world.label(text,x,y,z,'#c7e1c0',size);labels.push(mesh);return mesh};
@@ -12,6 +12,7 @@ export function extendSeoul(T,scene,world,tools){const {part,building,terminal,a
   const reserved=(u,v)=>Math.abs(u)<260&&Math.abs(v)<420||Math.abs(u-1450)<420&&Math.abs(v+1200)<650||Math.abs(u+1350)<350&&Math.abs(v+1150)<400||Math.abs(v-850)<170&&Math.abs(u)<1400||Math.abs(u+900)<300&&Math.abs(v-1450)<280||axes.some(a=>Math.abs(a-u)<35||Math.abs(a-v)<35);
   for(let u=-2100;u<=2100;u+=100)for(let v=-2100;v<=2100;v+=100){if(reserved(u,v))continue;const n=(Math.abs(u*17+v*31)+spec.seed*11)%997,apartment=u<0&&v<500,industry=v< -1000&&u<0,w=industry?55:24+n%12,d=industry?44:22+n%10,h=industry?9:apartment?26+n%6*5:12+n%10*4;building(null,x+u,z+v,w,d,h,industry?m.metal:apartment?m.white:m.concrete);count++;for(const side of [-1,1]){for(let y=3;y<h-1;y+=5)for(let k=-d/2+3;k<d/2;k+=6)part(.12,1.8,2,x+u+side*(w/2+.1),y,z+v+k,m.glass);part(2,.15,d+5,x+u+side*(w/2+2),.1,z+v,m.sand)}if(apartment){part(w+3,.6,d+3,x+u,h+.7,z+v,m.white);part(4,3,5,x+u+3,h+2,z+v,m.metal)}if(n%13===0){part(3,2,3,x+u+25,1,z+v+25,m.sand,true)}}
   const station=room(c.name+' 중앙역 · 지하 승강장 / 스크린도어',x,z+250,100,70,12,'station');for(let k=-3;k<=3;k++){part(8,1.2,3,x+k*12,.6,z+225,m.blue,true);part(1,.7,.12,x+k*12,1.6,z+223.4,m.black)}anchors.push({name:c.name+' 중앙역',city:c.id,x,z:z+302,source:'기존 서울 상세맵 확장'});
+  if(c.id==='pyongyang'){world.landmarks.push({name:'가상 북측 대통령 관저 · 비밀경호국',x:x+140,z:z-200});room('가상 북측 대통령 관저 · 비밀경호국',x+140,z-200,150,110,10,'operation');for(const side of [-1,1]){part(6,14,6,x+side*100+140,7,z-290,m.dark,true);part(11,3,11,x+side*100+140,15,z-290,m.glass)}}
   const airport={id:c.id,name:c.airport.replace(/ · 축약 배치/g,''),x:x+1450,z:z-1200};terminal(airport);const airFacility=facilities[facilities.length-1];airFacility.city=c.id;
   const civic=[];for(const [i,name]of ['종합병원','경찰서','소방서','학교','관공서','백화점'].entries()){const f=room(c.name+' '+name,x-1200+i*450,z+850,48,38,8,i===0?'hospital':'interior');civic.push(f)}
   for(let i=0;i<4;i++){const f=room(c.name+' 편의점 '+(i+1),x+(i%2?800:-800),z+(i<2?-350:350),20,18,4.5,'store');for(const side of [-1,1])for(let k=0;k<3;k++)part(1.2,.2,6,f.x+side*5,.5+k*.5,f.z,m.white);world.pickup(['ammo','armor','medkit','weapon'][i],f.x+4,f.z-2,i%5)}

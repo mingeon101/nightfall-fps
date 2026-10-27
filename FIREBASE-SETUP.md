@@ -1,3 +1,7 @@
+# V27 저장 규칙 변경
+
+개인 저장 슬롯과 협동 세계에 operation 필드가 추가되었습니다. 최신 firebase-database.rules.json을 콘솔에 게시하세요. 다른 앱과 DB를 공유하면 해당 앱 규칙을 보존하고 firebase-rules.fragment.json의 게임 경로만 병합합니다. 저장소 업로드가 서버 규칙을 자동 게시하지는 않습니다.
+
 # Firebase 로그인·저장 연결
 
 사용자가 제공한 `login-ccf94` 웹 앱 설정을 연결했습니다. 배포 도메인은 `mingeon101.github.io`이고, 데이터베이스는 `https://login-ccf94-default-rtdb.firebaseio.com`입니다.
