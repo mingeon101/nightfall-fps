@@ -1,6 +1,7 @@
-import {areaAt,AIRPORTS} from './atlas-data.mjs?v=24';
+import {EXPANDED_LIMIT,expandedCityAt} from './seoul-expansion-data.mjs?v=25';
+import {areaAt,AIRPORTS} from './atlas-data.mjs?v=25';
 // Pure simulation rules shared by the game and its regression checks.
-export const LIMIT=3400;
+export const LIMIT=EXPANDED_LIMIT;
 export const DISTRICTS=[
  {id:'jongno',name:'강북 · 종로·도심',x:-200,z:-220,color:'#d5ba80'},
  {id:'gangbuk',name:'강북 · 성동·광진',x:230,z:-220,color:'#8abbd3'},
@@ -32,7 +33,7 @@ export function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
 export const HILLS=[{x:-75,z:-415,radius:48,height:45,name:'북악산'},{x:55,z:-100,radius:34,height:32,name:'남산'},{x:100,z:-1500,radius:330,height:215,name:'북한산'},{x:550,z:-2050,radius:290,height:190,name:'도봉산'},{x:-160,z:1700,radius:280,height:170,name:'관악산'},{x:1650,z:-420,radius:150,height:105,name:'아차산'},{x:-1400,z:1000,radius:110,height:75,name:'개봉산'}];
 export const BRIDGES=[{x:-240,name:'마포대교'},{x:0,name:'반포대교'},{x:240,name:'한남대교'},...[-1800,-1400,-1000,-600,600,1000,1400,1800].map((x,i)=>({x,name:['행주대교','가양대교','성산대교','양화대교','동호대교','성수대교','청담대교','올림픽대교'][i]}))];
 export function groundHeight(x,z){return Math.max(0,...HILLS.map(h=>Math.max(0,1-Math.hypot(x-h.x,z-h.z)/h.radius)*h.height))}
-export function districtAt(x,z){const airport=AIRPORTS.find(a=>Math.hypot(x-a.x,z-a.z)<230);if(airport)return airport.name;if(Math.abs(z)<42)return '한강 · '+(BRIDGES.find(b=>Math.abs(x-b.x)<12)?.name||'수변');const h=HILLS.find(h=>Math.hypot(x-h.x,z-h.z)<h.radius);if(h)return h.name;return areaAt(x,z)?.name||'수도권 외곽 · 생성 구역'}
+export function districtAt(x,z){if(Math.abs(x)>3400||Math.abs(z)>3400)return expandedCityAt(x,z).name+' · 서울 상세맵 확장 구역';const airport=AIRPORTS.find(a=>Math.hypot(x-a.x,z-a.z)<230);if(airport)return airport.name;if(Math.abs(z)<42)return '한강 · '+(BRIDGES.find(b=>Math.abs(x-b.x)<12)?.name||'수변');const h=HILLS.find(h=>Math.hypot(x-h.x,z-h.z)<h.radius);if(h)return h.name;return areaAt(x,z)?.name||'수도권 외곽 · 생성 구역'}
 const indices=new WeakMap();
 function nearbyBlocks(blocks,minX,maxX,minZ,maxZ){let index=indices.get(blocks);if(!index||index.length!==blocks.length){index={length:blocks.length,cells:new Map()};for(const b of blocks)for(let x=Math.floor((b.x-b.w)/100);x<=Math.floor((b.x+b.w)/100);x++)for(let z=Math.floor((b.z-b.d)/100);z<=Math.floor((b.z+b.d)/100);z++){const key=x+','+z;if(!index.cells.has(key))index.cells.set(key,[]);index.cells.get(key).push(b)}indices.set(blocks,index)}const found=new Set();for(let x=Math.floor(minX/100);x<=Math.floor(maxX/100);x++)for(let z=Math.floor(minZ/100);z<=Math.floor(maxZ/100);z++)for(const b of index.cells.get(x+','+z)||[])found.add(b);return found}
 export function blockedAt(x,z,r,blocks,y=0,height=1.8){if(Math.abs(x)>LIMIT-r||Math.abs(z)>LIMIT-r)return true;for(const b of nearbyBlocks(blocks,x-r,x+r,z-r,z+r))if(Math.abs(x-b.x)<b.w+r&&Math.abs(z-b.z)<b.d+r&&y<b.top&&y+height>b.bottom)return true;return false}

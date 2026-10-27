@@ -1,6 +1,6 @@
-import {STATIONS,DISTRICTS,VEHICLE_TYPES,BRIDGES,HILLS,groundHeight} from './core.mjs?v=24';
+import {STATIONS,DISTRICTS,VEHICLE_TYPES,BRIDGES,HILLS,groundHeight} from './core.mjs?v=25';
 export function buildWorld(T,scene){
- const blocks=[],landmarks=[],vehicles=[],pickups=[],people=[],batches=new Map(),colliders=[];
+ const labels=[],blocks=[],landmarks=[],vehicles=[],pickups=[],people=[],batches=new Map(),colliders=[];
  let seed=7101;const rand=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
  const mat=(color,extra={})=>new T.MeshStandardMaterial({color,roughness:.85,...extra});
  const m={ground:mat(0x364345),road:mat(0x202b31),concrete:mat(0x78858b),dark:mat(0x26343c),metal:mat(0x596f68,{metalness:.45}),sand:mat(0x8d8a70),blue:mat(0x51758b),red:mat(0x9e6158),white:mat(0xc5d5cf),glass:mat(0x76abbd,{metalness:.5,roughness:.24}),window:mat(0xbac79c,{emissive:0x849968,emissiveIntensity:.8}),green:mat(0x476553),black:mat(0x111e24),yellow:mat(0xe0bc66),violet:mat(0x927a9e)};
@@ -9,7 +9,7 @@ export function buildWorld(T,scene){
   if(!batches.has(material))batches.set(material,[]);batches.get(material).push({w,h,d,x,y,z});
   if(collision)blocks.push({x,z,w:w/2,d:d/2,bottom:y-h/2,top:y+h/2});
  }
- function label(text,x,y,z,color='#d7e8ce',size=15){const c=document.createElement('canvas');c.width=512;c.height=96;const ctx=c.getContext('2d');ctx.fillStyle='#10202ddd';ctx.fillRect(0,0,512,96);ctx.strokeStyle=color;ctx.lineWidth=3;ctx.strokeRect(1,1,510,94);ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold 36px sans-serif';ctx.fillText(text,256,49,490);const s=new T.Sprite(new T.SpriteMaterial({map:new T.CanvasTexture(c),transparent:true,depthTest:true}));s.position.set(x,y,z);s.scale.set(size,size*96/512,1);scene.add(s);return s}
+ function label(text,x,y,z,color='#d7e8ce',size=15){const c=document.createElement('canvas');c.width=512;c.height=96;const ctx=c.getContext('2d');ctx.fillStyle='#10202ddd';ctx.fillRect(0,0,512,96);ctx.strokeStyle=color;ctx.lineWidth=3;ctx.strokeRect(1,1,510,94);ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold 36px sans-serif';ctx.fillText(text,256,49,490);const s=new T.Sprite(new T.SpriteMaterial({map:new T.CanvasTexture(c),transparent:true,depthTest:true}));s.position.set(x,y,z);s.scale.set(size,size*96/512,1);scene.add(s);labels.push(s);return s}
  // Seoul is a compressed, fictional game layout: west/east x, north/south z.
  cube(860,.5,382,0,-.3,-234,m.ground);cube(860,.5,382,0,-.3,234,m.ground);
  const water=mat(0x237b9f,{metalness:.45,roughness:.3}),roofSlate=mat(0x354f59),roofBlue=mat(0x28648a),palaceRed=mat(0x973e32),gold=mat(0xaa9154,{metalness:.5});
@@ -104,5 +104,5 @@ export function buildWorld(T,scene){
  const trains=[];
  // One instanced draw per material for thousands of architectural details.
  const transform=new T.Object3D();for(const [material,parts]of batches){const inst=new T.InstancedMesh(new T.BoxGeometry(1,1,1),material,parts.length);parts.forEach((p,i)=>{transform.position.set(p.x,p.y,p.z);transform.scale.set(p.w,p.h,p.d);transform.updateMatrix();inst.setMatrixAt(i,transform.matrix)});inst.computeBoundingSphere();scene.add(inst);colliders.push(inst)}
- return {blocks,landmarks,vehicles,pickups,people,trains,m,cube,label,rand,vehicle,person,pickup};
+ return {labels,blocks,landmarks,vehicles,pickups,people,trains,m,cube,label,rand,vehicle,person,pickup};
 }

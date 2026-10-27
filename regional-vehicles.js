@@ -1,9 +1,9 @@
-import {signalState,stepTraffic} from './city-sim.mjs?v=24';
-import {createRegionalFleet} from './regional-rules.mjs?v=24';
-import {VEHICLE_TYPES,moveBody,blockedAt} from './core.mjs?v=24';
-import {peninsulaLandAt} from './peninsula-data.mjs?v=24';
-import {segmentBox} from './civic-sim.mjs?v=24';
-import {buildAirWeapons} from './air-weapons.js?v=24';
+import {signalState,stepTraffic} from './city-sim.mjs?v=25';
+import {createRegionalFleet} from './regional-rules.mjs?v=25';
+import {VEHICLE_TYPES,moveBody,blockedAt} from './core.mjs?v=25';
+import {peninsulaLandAt} from './peninsula-data.mjs?v=25';
+import {segmentBox} from './civic-sim.mjs?v=25';
+import {buildAirWeapons} from './air-weapons.js?v=25';
 export function buildRegionalVehicles(T,scene,blocks,api){let fleet=api.createFleet?.()||createRegionalFleet(),current=null,time=0,aiClock=0,nextLaunch=60;const rigs=new Map(),origins=fleet.map(v=>({...v})),mat=color=>new T.MeshStandardMaterial({color}),green=mat(0x58694a),dark=mat(0x26332a),glass=mat(0x91b8c8),white=mat(0xd2d8d4);
  function cube(w,h,d,x,y,z,material=green,_solid=false,parent=scene){const mesh=new T.Mesh(new T.BoxGeometry(w,h,d),material);mesh.position.set(x,y,z);parent.add(mesh);return mesh}
  for(const v of fleet){v.root=new T.Group();v.root.userData.regionalVehicle=v;scene.add(v.root);v.root.visible=false}
