@@ -1,13 +1,17 @@
-# V25 원본 서울 확장 협동
+## 공격 드론 동기화
 
-원본 서울 장면을 기본으로 사용하며 22개 외곽 도시가 같은 좌표 세계에 있습니다. 위치 범위 ±39,990, 차량 ID 0–511을 지원하는 V25 규칙이 필요합니다. 원본의 경찰/재판/수감은 단일 관할이며 구버전 도시 모드의 플레이어별 사법 상태와 다릅니다.
+B 호출·복귀, WASD 이동, SPACE/C 고도, 클릭/Q 공격. 모바일의 드론·사격·상승·하강·사용 버튼으로 같은 동작을 합니다. 방장이 이동/탄약/피격/로켓을 판정하며 참가자가 드론 위치나 피해량을 직접 쓰지 않습니다. V26에는 inputs의 drone/action과 world/drones 규칙이 추가되었습니다. 최신 규칙을 콘솔에 게시한 후 새 방으로 접속하세요. 실제 여러 기기와 서버 Rules Emulator 검증은 별도입니다.
 
-# V25 도시별 4인 협동 설정
+# V26 원본 서울 확장 협동
+
+원본 서울 장면을 기본으로 사용하며 22개 외곽 도시가 같은 좌표 세계에 있습니다. 위치 범위 ±39,990, 차량 ID 0–511을 지원하는 V26 규칙이 필요합니다. 원본의 경찰/재판/수감은 단일 관할이며 구버전 도시 모드의 플레이어별 사법 상태와 다릅니다.
+
+# V26 도시별 4인 협동 설정
 
 1. [Authentication 제공업체](https://console.firebase.google.com/project/login-ccf94/authentication/providers)에서 익명·Google·Phone 중 사용할 로그인을 활성화합니다. 도메인/SMS 설정은 [FIREBASE-SETUP.md](FIREBASE-SETUP.md)를 참고합니다.
-2. [Realtime Database 규칙 편집기](https://console.firebase.google.com/project/login-ccf94/database/login-ccf94-default-rtdb/rules)에 [firebase-database.rules.json](firebase-database.rules.json)의 최신 V25 규칙을 게시합니다. 다른 앱과 공유하는 DB라면 전체 교체하지 말고 [firebase-rules.fragment.json](firebase-rules.fragment.json)의 nightfallSaves·nightfallRooms만 기존 rules 아래에 병합합니다. 상위의 포괄적인 공개 read/write가 자식 제한을 무력화하지 않도록 확인합니다. 저장소 파일 업로드는 Firebase 서버 규칙 게시와 다릅니다.
-3. 모두 [V25](https://mingeon101.github.io/nightfall-fps/?v=25)로 접속하고 이전 방에서 나온 뒤 새 방을 만듭니다. 방 버전 25이며 V23 방과 호환하지 않습니다.
-4. **서울 도시 맵 시작** 또는 원하는 도시로 이동 → 멀티플레이 → 새 방 생성 → 6자리 코드 참가. 서로 다른 계정이 필요합니다. 같은 브라우저의 일반 탭은 로그인 상태가 공유되므로 두 번째 기기나 시크릿 창의 별도 익명 계정을 이용합니다.
+2. [Realtime Database 규칙 편집기](https://console.firebase.google.com/project/login-ccf94/database/login-ccf94-default-rtdb/rules)에 [firebase-database.rules.json](firebase-database.rules.json)의 최신 V26 규칙을 게시합니다. 다른 앱과 공유하는 DB라면 전체 교체하지 말고 [firebase-rules.fragment.json](firebase-rules.fragment.json)의 nightfallSaves·nightfallRooms만 기존 rules 아래에 병합합니다. 상위의 포괄적인 공개 read/write가 자식 제한을 무력화하지 않도록 확인합니다. 저장소 파일 업로드는 Firebase 서버 규칙 게시와 다릅니다.
+3. 모두 [V26](https://mingeon101.github.io/nightfall-fps/?v=26)로 접속하고 이전 방에서 나온 뒤 새 방을 만듭니다. 방 버전 26이며 V25 방과 호환하지 않습니다.
+4. **서울 상세맵 확장 시작** 또는 원하는 도시로 이동 → 멀티플레이 → 새 방 생성 → 6자리 코드 참가. 서로 다른 계정이 필요합니다. 같은 브라우저의 일반 탭은 로그인 상태가 공유되므로 두 번째 기기나 시크릿 창의 별도 익명 계정을 이용합니다.
 
 ## 지도와 권한
 
