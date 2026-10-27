@@ -1,6 +1,6 @@
-import {SECURITY_HEALTH,SECURITY_MAGAZINE,SECURITY_POSTS,securityTarget} from './security-sim.mjs?v=23';
-import {groundHeight,moveBody,lineBlocked} from './core.mjs?v=23';
-import {segmentBox,freshCivic,registerCivilianDeath,advanceJustice,sanitizeCivic} from './civic-sim.mjs?v=23';
+import {SECURITY_HEALTH,SECURITY_MAGAZINE,SECURITY_POSTS,securityTarget} from './security-sim.mjs?v=24';
+import {groundHeight,moveBody,lineBlocked} from './core.mjs?v=24';
+import {segmentBox,freshCivic,registerCivilianDeath,advanceJustice,sanitizeCivic} from './civic-sim.mjs?v=24';
 export function buildCivic(T,scene,world,metropolis,api){
  const {blocks,m}=world,root=new T.Group();scene.add(root);let state=freshCivic(),arrestCooldown=0,roofReturn=null;const fires=new Map(),roofs=[],responders=[],officers=[],guards=[],prisoners=[];let fireClock=0,policeRespawn=0,securityAlarm=0,securityClock=0;const security=[];
  function box(w,h,d,x,y,z,mat=m.white,solid=false){const mesh=world.cube(w,h,d,x,y,z,mat,false,root);if(solid){const b={x,z,w:w/2,d:d/2,bottom:y-h/2,top:y+h/2,civic:true};blocks.push(b);mesh.userData.block=b}return mesh}

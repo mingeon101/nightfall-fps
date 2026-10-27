@@ -1,7 +1,7 @@
-import {CITY_IDS} from './city-map-data.mjs?v=23';
-import {PENINSULA_CITIES} from './peninsula-data.mjs?v=23';
-import {PLAYER_MAX_HEALTH} from './player-rules.mjs?v=23';
-import {sanitizeCivic} from './civic-sim.mjs?v=23';
+import {CITY_IDS} from './city-map-data.mjs?v=24';
+import {PENINSULA_CITIES} from './peninsula-data.mjs?v=24';
+import {PLAYER_MAX_HEALTH} from './player-rules.mjs?v=24';
+import {sanitizeCivic} from './civic-sim.mjs?v=24';
 const finite=(v,f=0)=>typeof v==='number'&&Number.isFinite(v)?v:f;
 const bound=(v,a,b,f=a)=>Math.max(a,Math.min(b,finite(v,f)));
 export function normalizeSave(value){

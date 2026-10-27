@@ -1,5 +1,5 @@
-import {PLAYER_MAX_HEALTH} from './player-rules.mjs?v=23';
-export const ROOM_VERSION=23,ROOM_CAPACITY=4;
+import {PLAYER_MAX_HEALTH} from './player-rules.mjs?v=24';
+export const ROOM_VERSION=24,ROOM_CAPACITY=4;
 const finite=(n,min,max,fallback=0)=>Number.isFinite(n)?Math.max(min,Math.min(max,n)):fallback;
 export function roomCode(value){const code=String(value).trim().toUpperCase();if(!/^[A-Z2-9]{6}$/.test(code))throw Error('방 코드 6자리를 입력하세요.');return code}
 export function availableSlot(slots,uid){const entries=Object.entries(slots||{});if(entries.some(([,owner])=>owner===uid))return -2;for(let i=1;i<ROOM_CAPACITY;i++)if(!slots?.[i])return i;return -1}

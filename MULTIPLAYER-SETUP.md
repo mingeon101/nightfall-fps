@@ -1,8 +1,8 @@
-# V23 도시별 4인 협동 설정
+# V24 도시별 4인 협동 설정
 
 1. [Authentication 제공업체](https://console.firebase.google.com/project/login-ccf94/authentication/providers)에서 익명·Google·Phone 중 사용할 로그인을 활성화합니다. 도메인/SMS 설정은 [FIREBASE-SETUP.md](FIREBASE-SETUP.md)를 참고합니다.
-2. [Realtime Database 규칙 편집기](https://console.firebase.google.com/project/login-ccf94/database/login-ccf94-default-rtdb/rules)에 [firebase-database.rules.json](firebase-database.rules.json)의 최신 V23 규칙을 게시합니다. 다른 앱과 공유하는 DB라면 전체 교체하지 말고 [firebase-rules.fragment.json](firebase-rules.fragment.json)의 nightfallSaves·nightfallRooms만 기존 rules 아래에 병합합니다. 상위의 포괄적인 공개 read/write가 자식 제한을 무력화하지 않도록 확인합니다. 저장소 파일 업로드는 Firebase 서버 규칙 게시와 다릅니다.
-3. 모두 [V23](https://mingeon101.github.io/nightfall-fps/?v=23)로 접속하고 이전 방에서 나온 뒤 새 방을 만듭니다. 방 버전 23이며 V22 방과 호환하지 않습니다.
+2. [Realtime Database 규칙 편집기](https://console.firebase.google.com/project/login-ccf94/database/login-ccf94-default-rtdb/rules)에 [firebase-database.rules.json](firebase-database.rules.json)의 최신 V24 규칙을 게시합니다. 다른 앱과 공유하는 DB라면 전체 교체하지 말고 [firebase-rules.fragment.json](firebase-rules.fragment.json)의 nightfallSaves·nightfallRooms만 기존 rules 아래에 병합합니다. 상위의 포괄적인 공개 read/write가 자식 제한을 무력화하지 않도록 확인합니다. 저장소 파일 업로드는 Firebase 서버 규칙 게시와 다릅니다.
+3. 모두 [V24](https://mingeon101.github.io/nightfall-fps/?v=24)로 접속하고 이전 방에서 나온 뒤 새 방을 만듭니다. 방 버전 24이며 V23 방과 호환하지 않습니다.
 4. **서울 도시 맵 시작** 또는 원하는 도시로 이동 → 멀티플레이 → 새 방 생성 → 6자리 코드 참가. 서로 다른 계정이 필요합니다. 같은 브라우저의 일반 탭은 로그인 상태가 공유되므로 두 번째 기기나 시크릿 창의 별도 익명 계정을 이용합니다.
 
 ## 지도와 권한
