@@ -2,6 +2,10 @@
 
 사용자가 제공한 `login-ccf94` 웹 앱 설정을 연결했습니다. 배포 도메인은 `mingeon101.github.io`이고, 데이터베이스는 `https://login-ccf94-default-rtdb.firebaseio.com`입니다.
 
+## V23 도시별 저장·협동 갱신
+
+기존 V22 사용자도 최신 규칙을 게시해야 합니다. 현재 도시 식별자, 도시별 적 제압·지휘소 진행, 도시별 공유 세계와 차량 소유권을 추가했습니다. nightfallSaves와 nightfallRooms 두 경로를 함께 갱신하고 모두 V23에서 새 방으로 참가하세요. 구버전 저장은 읽어서 새 형식으로 정리합니다.
+
 ## Firebase 콘솔에서 필요한 설정
 
 1. [Authentication → Sign-in method](https://console.firebase.google.com/project/login-ccf94/authentication/providers)에서 **Google**을 활성화하고 지원 이메일을 선택합니다. **Phone**과 **Anonymous(익명)**도 활성화합니다.
