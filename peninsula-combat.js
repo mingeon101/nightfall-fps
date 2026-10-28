@@ -1,9 +1,9 @@
-import {PENINSULA_CITIES as ATLAS_CITIES} from './peninsula-data.mjs?v=27';
-import {interestRows} from './network-performance.mjs?v=27';
-import {createNorthernForce,advanceFront,captureAllowed,COMMAND_POST,GAME_FRONT} from './front-sim.mjs?v=27';
-import {moveBody,blockedAt,WEAPONS} from './core.mjs?v=27';
-import {segmentBox} from './civic-sim.mjs?v=27';
-import {peninsulaLandAt} from './peninsula-data.mjs?v=27';
+import {PENINSULA_CITIES as ATLAS_CITIES} from './peninsula-data.mjs?v=28';
+import {interestRows} from './network-performance.mjs?v=28';
+import {createNorthernForce,advanceFront,captureAllowed,COMMAND_POST,GAME_FRONT} from './front-sim.mjs?v=28';
+import {moveBody,blockedAt,WEAPONS} from './core.mjs?v=28';
+import {segmentBox} from './civic-sim.mjs?v=28';
+import {peninsulaLandAt} from './peninsula-data.mjs?v=28';
 export function buildPeninsulaCombat(T,scene,camera,blocks,api){const PENINSULA_CITIES=api.cities||ATLAS_CITIES,makeArmy=()=>api.createArmy?.()||createNorthernForce();
  let army=makeArmy(),trigger=false,cooldown=0,reloadTime=0,reloadWeapon=0,strategicClock=0,nearClock=0,captureTime=0,capturing=false,secured=false,kills=0,recoil=0,lastDamage=-100,time=0;const encounters=new Set(),extras=[],allySlots=[],extraSlots=[];const allies=api.createAllies?.()||Array.from({length:50},(_,i)=>{const c=PENINSULA_CITIES[Math.floor(i/2)%23];return {id:500+i,role:'ally',x:c.x-8+(i%2)*8,y:0,z:c.z+32,hp:100,ammo:12,reloading:0,cool:1,yaw:0,death:0,moving:false,city:c.id}});const effects=[],slots=[],MAX=64,$=id=>document.getElementById(id);const material=color=>new T.MeshStandardMaterial({color,roughness:.85});const olive=material(0x536242),skin=material(0xaf977b),dark=material(0x26332a),blue=material(0x5b91a5),securedMaterial=material(0x98eea3),dummy=new T.Object3D();
  const parts=[{w:.6,h:.7,d:.38,y:1.15,m:olive},{w:.35,h:.35,d:.35,y:1.75,m:skin},{w:.44,h:.18,d:.42,y:1.96,m:dark},{w:.22,h:.8,d:.25,x:-.18,y:.45,m:olive,leg:1},{w:.22,h:.8,d:.25,x:.18,y:.45,m:olive,leg:-1},{w:.75,h:.25,d:.3,y:1.25,z:-.15,m:olive},{w:.15,h:.18,d:.9,x:.24,y:1.18,z:-.48,m:dark}];
@@ -11,7 +11,7 @@ export function buildPeninsulaCombat(T,scene,camera,blocks,api){const PENINSULA_
  const allyMeshes=parts.map(p=>{const mesh=new T.InstancedMesh(new T.BoxGeometry(p.w,p.h,p.d),p.m===olive?blue:p.m,32);mesh.count=0;mesh.frustumCulled=false;scene.add(mesh);return mesh}),extraMeshes=parts.map(p=>{const mesh=new T.InstancedMesh(new T.BoxGeometry(p.w,p.h,p.d),p.m===olive?dark:p.m,32);mesh.count=0;mesh.frustumCulled=false;scene.add(mesh);return mesh});meshes.forEach(m=>m.userData.slotSet=slots);allyMeshes.forEach(m=>m.userData.slotSet=allySlots);extraMeshes.forEach(m=>m.userData.slotSet=extraSlots);
  function box(w,h,d,x,y,z,mat=dark,solid=true){const mesh=new T.Mesh(new T.BoxGeometry(w,h,d),mat);mesh.position.set(x,y,z);scene.add(mesh);if(solid)blocks.push({x,z,w:w/2,d:d/2,bottom:y-h/2,top:y+h/2});return mesh}
  const c=COMMAND_POST;box(24,.2,24,c.x,0,c.z);box(24,.3,24,c.x,5,c.z);box(.5,5,24,c.x-12,2.5,c.z);box(.5,5,24,c.x+12,2.5,c.z);box(24,5,.5,c.x,2.5,c.z-12);for(const side of [-1,1])box(9,5,.5,c.x+side*7.5,2.5,c.z+12);box(6,1,2,c.x,.5,c.z-4,blue);const beacon=box(1,6,1,c.x+15,3,c.z,blue,false);
- const gun=new T.Group();const gunBody=new T.Mesh(new T.BoxGeometry(.16,.19,.6),dark);gunBody.position.set(.26,-.25,-.5);gun.add(gunBody);const barrel=new T.Mesh(new T.BoxGeometry(.07,.07,.55),dark);barrel.position.set(.26,-.23,-.95);gun.add(barrel);camera.add(gun);scene.add(camera);const ray=new T.Raycaster(),direction=new T.Vector3();
+ const gun=new T.Group();const gunBody=new T.Mesh(new T.BoxGeometry(.16,.19,.6),dark);gunBody.position.set(.26,-.25,-.5);gun.add(gunBody);const barrel=new T.Mesh(new T.BoxGeometry(.07,.07,.55),dark);barrel.position.set(.26,-.23,-.95);gun.add(barrel);camera.add(gun);scene.add(camera);const ray=new T.Raycaster(),direction=new T.Vector3();ray.camera=camera;
  function visible(a,b){return !blockedAt(a.x,a.z,.05,blocks,a.y,.05)&&!blocks.some(block=>segmentBox(a,b,block)!==null)}
  function line(a,b,color=0xf8db8a,life=.1){const geometry=new T.BufferGeometry().setFromPoints([new T.Vector3(a.x,a.y,a.z),new T.Vector3(b.x,b.y,b.z)]),mesh=new T.Line(geometry,new T.LineBasicMaterial({color}));scene.add(mesh);effects.push({mesh,life});while(effects.length>32)removeEffect(0)}
  function removeEffect(index){const {mesh}=effects[index];scene.remove(mesh);mesh.geometry.dispose();mesh.material.dispose();effects.splice(index,1)}

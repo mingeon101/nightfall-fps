@@ -1,5 +1,5 @@
-import {PYONGYANG,PRESIDENT_HOME,PRESIDENT_ROUTE,freshOperation,sanitizeOperation,advanceOperation,fleeWaypoint} from './pyongyang-mission.mjs?v=27';
-import {moveBody,lineBlocked} from './core.mjs?v=27';
+import {PYONGYANG,PRESIDENT_HOME,PRESIDENT_ROUTE,freshOperation,sanitizeOperation,advanceOperation,fleeWaypoint} from './pyongyang-mission.mjs?v=28';
+import {moveBody,lineBlocked} from './core.mjs?v=28';
 export function buildPyongyangOperation(T,scene,world,metropolis,api){const selected=api.enemies.filter(a=>!a.vehicle&&!a.assemblyGuard).slice(-17),leader=selected.at(-1),guards=selected.slice(0,-1);let state=freshOperation();
  const homes=guards.map((a,i)=>({x:PYONGYANG.x+(i<8?i%2?225:55:i%2?180:100),z:PYONGYANG.z+(i<8?-310+Math.floor(i/2)*65:-225+Math.floor((i-8)/2)*20)}));
  function recolor(o,from,to){if(o.material===from)o.material=to;for(const c of o.children||[])recolor(c,from,to)}for(const g of guards){g.role='secret-service';recolor(g.root,world.m.sand,world.m.dark)}leader.role='fictional-president';recolor(leader.root,world.m.sand,world.m.black);if(leader.weapon){leader.weapon.visible=false;leader.weapon=null}const name=world.label('가상 북측 대통령',0,0,0,'#ffe3a5',4);scene.remove(name);name.position.set(0,2.8,0);leader.root.add(name);

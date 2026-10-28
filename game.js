@@ -1,26 +1,26 @@
-import {buildPyongyangOperation} from './operation-world.js?v=27';
-import {buildAtmosphere} from './atmosphere-world.js?v=27';
-import {installFieldPhone} from './phone-ui.js?v=27';
-import {buildAttackDrones} from './drone-system.js?v=27';
-import {EXPANDED_CITIES,expandedCityAt} from './seoul-expansion-data.mjs?v=27';
-import {PLAYER_MAX_HEALTH,canReceiveAttack} from './player-rules.mjs?v=27';
-import {buildPeninsula} from './city-world-manager.js?v=27';
-import {frameCounter} from './performance-metrics.mjs?v=27';
-import {interestRows,simulationNearby,simulationDue,angleStep} from './network-performance.mjs?v=27';
-import {buildAirWeapons} from './air-weapons.js?v=27';
-import {installMultiplayer} from './multiplayer.js?v=27';
-import {buildCivic} from './civic-world.js?v=27';
-import {ENEMY_COUNT,ALLY_COUNT,CombatIndex,patrolOffset,aiInterval} from './combat-sim.mjs?v=27';
-import {installMobileControls} from './mobile-controls.js?v=27';
-import {normalizeSave} from './save-data.mjs?v=27';
-import {buildMetropolitan,buildAircraft} from './metropolitan.js?v=27';
-import {configureRegionalTransit} from './regional-transit.mjs?v=27';
-import {stepTraffic,SHOP_ITEMS,purchaseItem} from './city-sim.mjs?v=27';
-import {SEOUL_AREAS,AIRPORTS} from './atlas-data.mjs?v=27';
-import {buildTransport,slideDoors} from './transit-world.js?v=27';
-import {BUS_STOPS,PLATFORM_PHASES,createMetroJourney,stepMetro,boardMetro,alightMetro,createBusService,requestBus,busRemaining,stepBus,boardBus,alightBus,busPosition} from './transport.mjs?v=27';
-import {buildWorld} from './world.js?v=27';
-import {DISTRICTS,STATIONS,WEAPONS,VEHICLE_TYPES,clamp,groundHeight,districtAt,blockedAt,moveBody,lineBlocked,damageVitals,routeLength,sampleRoute,transitRoute,chooseExit,vehicleStep,BRIDGES,HILLS} from './core.mjs?v=27';
+import {buildPyongyangOperation} from './operation-world.js?v=28';
+import {buildAtmosphere} from './atmosphere-world.js?v=28';
+import {installFieldPhone} from './phone-ui.js?v=28';
+import {buildAttackDrones} from './drone-system.js?v=28';
+import {EXPANDED_CITIES,expandedCityAt} from './seoul-expansion-data.mjs?v=28';
+import {PLAYER_MAX_HEALTH,canReceiveAttack} from './player-rules.mjs?v=28';
+import {buildPeninsula} from './city-world-manager.js?v=28';
+import {frameCounter} from './performance-metrics.mjs?v=28';
+import {interestRows,simulationNearby,simulationDue,angleStep} from './network-performance.mjs?v=28';
+import {buildAirWeapons} from './air-weapons.js?v=28';
+import {installMultiplayer} from './multiplayer.js?v=28';
+import {buildCivic} from './civic-world.js?v=28';
+import {ENEMY_COUNT,ALLY_COUNT,CombatIndex,patrolOffset,aiInterval} from './combat-sim.mjs?v=28';
+import {installMobileControls} from './mobile-controls.js?v=28';
+import {normalizeSave} from './save-data.mjs?v=28';
+import {buildMetropolitan,buildAircraft} from './metropolitan.js?v=28';
+import {configureRegionalTransit} from './regional-transit.mjs?v=28';
+import {stepTraffic,SHOP_ITEMS,purchaseItem} from './city-sim.mjs?v=28';
+import {SEOUL_AREAS,AIRPORTS} from './atlas-data.mjs?v=28';
+import {buildTransport,slideDoors} from './transit-world.js?v=28';
+import {BUS_STOPS,PLATFORM_PHASES,createMetroJourney,stepMetro,boardMetro,alightMetro,createBusService,requestBus,busRemaining,stepBus,boardBus,alightBus,busPosition} from './transport.mjs?v=28';
+import {buildWorld} from './world.js?v=28';
+import {DISTRICTS,STATIONS,WEAPONS,VEHICLE_TYPES,clamp,groundHeight,districtAt,blockedAt,moveBody,lineBlocked,damageVitals,routeLength,sampleRoute,transitRoute,chooseExit,vehicleStep,BRIDGES,HILLS} from './core.mjs?v=28';
 const $=id=>document.getElementById(id);
 let multiplayer=null,soloBackup=null,networkWorld=null,vehicleClaimPending=false;const networkPeers=new Map(),networkFires=new Map(),networkActors=new Set();let networkClaims={};
 const inRoom=()=>multiplayer?.session;
@@ -60,7 +60,7 @@ const player={x:220,z:-115,y:0,vy:0,health:PLAYER_MAX_HEALTH,armor:0,grounded:tr
 let active=false,started=false,ended=false,elapsed=0,yaw=0,pitch=0,shooting=false,aim=false,fireCooldown=0,reload=0,recoil=0,hit=0,hurt=0,lastDamage=-99,kills=0,noticeTime=0,audio,currentVehicle=null,trip=null,stationMenu=null,selected=0,mapExpanded=false,hudTick=0;
 const inventory=WEAPONS.map((w,i)=>({owned:i===0||i===4,ammo:w.mag,reserve:w.reserve}));
 const rockets=[];for(const v of vehicles){v.root.userData.vehicle=v;v.hp=650}
-const keys=new Set(),ray=new T.Raycaster(),direction=new T.Vector3(),temp=new T.Vector3(),effects=[];
+const keys=new Set(),ray=new T.Raycaster(),direction=new T.Vector3(),temp=new T.Vector3(),effects=[];ray.camera=camera;
 const map=$('minimap').getContext('2d');
 const gun=new T.Group();camera.add(gun);gun.position.set(.28,-.29,-.48);
 world.cube(.13,.15,.48,0,0,0,m.black,false,gun);const barrel=world.cube(.07,.07,.63,0,.02,-.47,m.metal,false,gun);world.cube(.12,.1,.23,0,-.02,.3,m.metal,false,gun);const magazine=world.cube(.09,.23,.15,0,-.17,-.07,m.black,false,gun);world.cube(.08,.23,.10,0,-.15,.12,m.dark,false,gun);world.cube(.12,.15,.38,.10,-.19,.22,m.green,false,gun);world.cube(.12,.12,.29,-.09,-.16,-.16,m.green,false,gun);
@@ -260,7 +260,7 @@ const networkBridge={
  claims(claims){if(peninsula.active){networkClaims=claims;peninsula.claimState(claims);return}for(const [id,v]of vehicles.entries()){const owner=!v.hostile&&!v.service?claims[id]:null;v.networkOwner=owner||null;if(owner){if(v.allyPilot){const a=v.allyPilot;a.vehicle=null;const exit=metropolis.safeSpawn({x:v.x+6,z:v.z});a.root.position.set(exit.x,0,exit.z);a.root.visible=true;v.allyPilot=null}v.occupied=true}else if(networkClaims[id]&&!v.allyPilot&&v!==currentVehicle)v.occupied=false}networkClaims=claims},
  snapshot(peers){if(peninsula.active)return peninsula.snapshot(peers);const compact=rows=>rows.map(row=>row.map(n=>Math.round(n*100)/100));const centers=[player,...peers,...drones.positions()];return {operation:operation.snapshot(),drones:drones.snapshot(),scope:'seoul',t:elapsed,active,actors:compact(interestRows(people.map((p,id)=>[id,p.root.position.x,p.root.position.y,p.root.position.z,p.root.rotation.y,Math.max(0,p.hp),p.ammo,p.reloading,p.death]).filter(row=>!people[row[0]].vehicle),centers,32,320,row=>operation.state.phase>0&&centers.some(p=>Math.hypot(p.x-operation.home.x,p.z-operation.home.z)<900)&&operation.actors.includes(people[row[0]]))),dead:people.map((p,id)=>p.hp<=0?id:-1).filter(id=>id>=0),vehicles:compact(interestRows(vehicles.map((v,id)=>[id,v.x,v.y,v.z,v.yaw,v.speed,v.occupied?1:0,v.destroyed?1:0,v.traffic?1:0,v.allyPilot?people.indexOf(v.allyPilot):-1,v.deployed?1:0,v.hp||0,v.heatAmmo??4,v.flareAmmo??6,v.heatCooldown||0,v.flareCooldown||0,v.evasion||0,v.evasionSide||1]),centers,16,500,row=>row[0]===0||row[6]===1&&!vehicles[row[0]].traffic||row[10]===1)),chief:false,dawn:0,air:airWeapons.snapshot(),fires:[...civic.fires.values()].filter(f=>f.heat>=30).map(f=>[blocks.indexOf(f.b),f.flame.position.x,f.flame.position.y,f.flame.position.z,f.heat])}},
  world(s){if(s.scope==='peninsula'){if(!peninsula.active){for(const id of inRoom()?.claims||[])multiplayer.release(id).catch(()=>{});currentVehicle=null;trip=null;busRide=null;peninsula.enter()}peninsula.receive(s);return}if(peninsula.active){peninsula.exit(true);for(const e of networkPeers.values())scene.add(e.rig.root)}if(!Number.isFinite(s.t)||s.t<0||s.t>1e9)return;networkWorld=s;airWeapons.receive(s.air);drones.receive(s.drones);operation.receive(s.operation);elapsed=s.t;for(const p of people){delete p.networkTarget;p.root.visible=false}networkActors.clear();for(const v of vehicles)v.networkRelevant=false;for(const row of Array.isArray(s.actors)?s.actors:[]){if(!Array.isArray(row)||row.length!==9||!row.every(Number.isFinite))continue;const [id,x,y,z,angle,hp,ammo,reloading,death]=row,p=people[id];if(!Number.isInteger(id)||!p||Math.abs(x)>40000||Math.abs(z)>40000||y< -30||y>600)continue;p.networkTarget=row;networkActors.add(p);p.hp=Math.max(0,Math.min(650,hp));p.ammo=Math.max(0,ammo);p.reloading=Math.max(0,reloading);p.death=Math.max(0,Math.min(1,death))}for(const id of Array.isArray(s.dead)?s.dead:[])if(Number.isInteger(id)&&people[id]){people[id].hp=0;people[id].death=Math.max(.001,people[id].death)}for(const row of Array.isArray(s.vehicles)?s.vehicles:[]){if(!Array.isArray(row)||row.length!==18||!row.every(Number.isFinite))continue;const [id,x,y,z,angle,speed,occupied,destroyed,traffic,pilot,deployed,hp,heatAmmo,flareAmmo,heatCooldown,flareCooldown,evasion,evasionSide]=row,v=vehicles[id];if(!Number.isInteger(id)||!v||Math.abs(x)>40000||Math.abs(z)>40000||y< -30||y>600)continue;v.networkRelevant=true;v.networkTarget=row;if(v.type==='fighter')Object.assign(v,{heatAmmo:Math.max(0,Math.min(4,heatAmmo)),flareAmmo:Math.max(0,Math.min(6,flareAmmo)),heatCooldown,flareCooldown,evasion:Math.max(0,Math.min(1.5,evasion)),evasionSide:evasionSide<0?-1:1});if(v===currentVehicle){v.hp=hp;if(destroyed===1){v.destroyed=true;v.occupied=false;currentVehicle=null;player.y=groundHeight(player.x,player.z);multiplayer?.release(id).catch(()=>{});damage(50);message('탑승 장비 파괴 · 지상으로 탈출',4)}continue}Object.assign(v,{speed,occupied:occupied===1,destroyed:destroyed===1,traffic:traffic===1,deployed:deployed===1,hp});if(pilot<0&&v.allyPilot){v.allyPilot.vehicle=null;v.allyPilot=null}if(pilot>=0&&Number.isInteger(pilot)&&people[pilot]?.ally){v.allyPilot=people[pilot];people[pilot].vehicle=v}}kills=enemies.filter(e=>e.hp<=0).length;civic.state.chiefDown=false;civic.state.dawn=0;const seenFires=new Set();for(const row of Array.isArray(s.fires)?s.fires:[]){if(!Array.isArray(row)||row.length!==5||!row.every(Number.isFinite)||Math.abs(row[1])>40000||Math.abs(row[3])>40000)continue;seenFires.add(row[0]);let flame=networkFires.get(row[0]);if(!flame){flame=new T.Mesh(new T.ConeGeometry(1.8,5,7),new T.MeshBasicMaterial({color:0xff7a27,transparent:true,opacity:.8}));scene.add(flame);networkFires.set(row[0],flame)}flame.position.set(row[1],row[2],row[3]);flame.scale.y=Math.max(.1,row[4]/60)}for(const [id,mesh]of networkFires)if(!seenFires.has(id)){scene.remove(mesh);mesh.geometry.dispose();mesh.material.dispose();networkFires.delete(id)}$('mpbadge').textContent='협동 '+inRoom()?.code+(s.active?'':' · 방장 일시정지')},
- remoteShot(uid,shot){if(shot.kind==='use'&&shot.action==='pyongyang'){if(inRoom()?.isHost&&active&&!peninsula.active)operation.start();return}if(shot.kind==='drone'){if(inRoom()?.isHost&&!peninsula.active&&active)drones.command(uid,shot.action,shot.drone);return}if(peninsula.active){if(inRoom()?.isHost)peninsula.remoteShot(uid,shot);return}if(!inRoom()?.isHost||!active)return;const pose=inRoom().peers[uid];if(!pose)return;const v=pose.vehicle>=0&&networkClaims[pose.vehicle]===uid?vehicles[pose.vehicle]:null;if(shot.kind==='heat'||shot.kind==='flare'){if(v?.type==='fighter'){if(shot.kind==='heat')airWeapons.launch(v,false);else airWeapons.flare(v,false)}return}const w=v?{damage:v.type==='tank'?198:72,pellets:1,range:500}:WEAPONS[shot.weapon];if(w.projectile){launchRocket(false,shot.origin,shot.direction);return}const cast=new T.Raycaster(),dir=new T.Vector3(shot.direction.x,shot.direction.y,shot.direction.z),from=new T.Vector3(shot.origin.x,shot.origin.y,shot.origin.z);for(let i=0;i<w.pellets;i++){cast.set(from,dir);cast.far=w.range;const hits=cast.intersectObjects([...people.filter(p=>p.hp>0&&!p.vehicle).map(p=>p.root),...vehicles.filter(other=>other!==v&&!other.destroyed&&(!other.hostile||other.deployed)).map(other=>other.root)],true);const end=hits[0]?.point||from.clone().addScaledVector(dir,w.range),obstacle=civic.firstHit(from,end);if(obstacle)civic.ignite(obstacle,w.damage);else if(hits[0]&&!lineBlocked(from,hits[0].point,blocks))applyImpact(hits[0],w.damage);tracer(from,obstacle?.point||end,0x8be9d8)}},
+ remoteShot(uid,shot){if(shot.kind==='use'&&shot.action==='pyongyang'){if(inRoom()?.isHost&&active&&!peninsula.active)operation.start();return}if(shot.kind==='drone'){if(inRoom()?.isHost&&!peninsula.active&&active)drones.command(uid,shot.action,shot.drone);return}if(peninsula.active){if(inRoom()?.isHost)peninsula.remoteShot(uid,shot);return}if(!inRoom()?.isHost||!active)return;const pose=inRoom().peers[uid];if(!pose)return;const v=pose.vehicle>=0&&networkClaims[pose.vehicle]===uid?vehicles[pose.vehicle]:null;if(shot.kind==='heat'||shot.kind==='flare'){if(v?.type==='fighter'){if(shot.kind==='heat')airWeapons.launch(v,false);else airWeapons.flare(v,false)}return}const w=v?{damage:v.type==='tank'?198:72,pellets:1,range:500}:WEAPONS[shot.weapon];if(w.projectile){launchRocket(false,shot.origin,shot.direction);return}const cast=new T.Raycaster(),dir=new T.Vector3(shot.direction.x,shot.direction.y,shot.direction.z),from=new T.Vector3(shot.origin.x,shot.origin.y,shot.origin.z);cast.camera=camera;for(let i=0;i<w.pellets;i++){cast.set(from,dir);cast.far=w.range;const hits=cast.intersectObjects([...people.filter(p=>p.hp>0&&!p.vehicle).map(p=>p.root),...vehicles.filter(other=>other!==v&&!other.destroyed&&(!other.hostile||other.deployed)).map(other=>other.root)],true);const end=hits[0]?.point||from.clone().addScaledVector(dir,w.range),obstacle=civic.firstHit(from,end);if(obstacle)civic.ignite(obstacle,w.damage);else if(hits[0]&&!lineBlocked(from,hits[0].point,blocks))applyImpact(hits[0],w.damage);tracer(from,obstacle?.point||end,0x8be9d8)}},
  hurt:amount=>{if(peninsula.active)peninsula.battle.noteDamage();damage(amount)}
 };
 

@@ -1,20 +1,20 @@
-import {drawCityTacticalMap} from './city-tactical-map.mjs?v=27';
-import {buildDetailedCity} from './detailed-city-world.js?v=27';
-import {citySites,cityCivilian,localLandAt,createCityArmy,createCityAllies,createCityFleet} from './city-map-data.mjs?v=27';
-import {buildRegionalTransit} from './regional-transit-world.js?v=27';
-import {civicSites as atlasSites} from './regional-rules.mjs?v=27';
-import {buildRegionalVehicles} from './regional-vehicles.js?v=27';
-import {buildRegionalCivic} from './regional-civic.js?v=27';
-import {regionalDamageAllowed} from './regional-rules.mjs?v=27';
-import {interestRows} from './network-performance.mjs?v=27';
-import {buildPeninsulaCombat} from './peninsula-combat.js?v=27';
-import {PENINSULA_CITIES as ATLAS_CITIES,RAIL_NODES,PENINSULA_RAIL,KOREA_COAST,projectKorea,railwayRoute,journeyPosition,peninsulaLandAt as atlasLandAt} from './peninsula-data.mjs?v=27';
-import {moveBody,blockedAt} from './core.mjs?v=27';
+import {drawCityTacticalMap} from './city-tactical-map.mjs?v=28';
+import {buildDetailedCity} from './detailed-city-world.js?v=28';
+import {citySites,cityCivilian,localLandAt,createCityArmy,createCityAllies,createCityFleet} from './city-map-data.mjs?v=28';
+import {buildRegionalTransit} from './regional-transit-world.js?v=28';
+import {civicSites as atlasSites} from './regional-rules.mjs?v=28';
+import {buildRegionalVehicles} from './regional-vehicles.js?v=28';
+import {buildRegionalCivic} from './regional-civic.js?v=28';
+import {regionalDamageAllowed} from './regional-rules.mjs?v=28';
+import {interestRows} from './network-performance.mjs?v=28';
+import {buildPeninsulaCombat} from './peninsula-combat.js?v=28';
+import {PENINSULA_CITIES as ATLAS_CITIES,RAIL_NODES,PENINSULA_RAIL,KOREA_COAST,projectKorea,railwayRoute,journeyPosition,peninsulaLandAt as atlasLandAt} from './peninsula-data.mjs?v=28';
+import {moveBody,blockedAt} from './core.mjs?v=28';
 export function buildCityMap(T,api){const PENINSULA_CITIES=api.citySpec?[api.citySpec]:ATLAS_CITIES,peninsulaLandAt=api.citySpec?localLandAt:atlasLandAt,civicSites=id=>api.citySpec?citySites(api.citySpec.id):atlasSites(id);let detailed=null;
  const scene=new T.Scene();scene.background=new T.Color(0xa3c9dc);scene.fog=new T.FogExp2(0xa3c9dc,.0004);scene.add(new T.HemisphereLight(0xc9ebff,0x4f6548,2.6));const sun=new T.DirectionalLight(0xffedd1,3);sun.position.set(-200,500,100);scene.add(sun);
  const camera=new T.PerspectiveCamera(75,innerWidth/innerHeight,.08,7500),blocks=[],cityRoots=[],pedestrians=[];camera.rotation.order='YXZ';let built=false,active=false,city=PENINSULA_CITIES[0],fantasy=false,journey=null,flight=false,expanded=false,viewYaw=0,time=0,mapClock=0,vy=0,grounded=true;
  const position={x:city.x,z:city.z+25,y:0};const $=id=>document.getElementById(id),mat=color=>new T.MeshStandardMaterial({color,roughness:.85});const materials={ground:mat(0x668260),road:mat(0x374550),white:mat(0xc4c9c2),blue:mat(0x7497a9),dark:mat(0x293e49),rail:mat(0x727b76),window:mat(0xabc9d0),red:mat(0x967c70)};
- function cube(w,h,d,x,y,z,material=materials.white,parent=scene,solid=false){const mesh=new T.Mesh(new T.BoxGeometry(w,h,d),material);mesh.position.set(x,y,z);parent.add(mesh);if(solid)blocks.push({x,z,w:w/2,d:d/2,bottom:y-h/2,top:y+h/2});return mesh}
+ function cube(w,h,d,x,y,z,material=materials.white,parent=scene,solid=false){const mesh=new T.Mesh(new T.BoxGeometry(w,h,d),material);/* Display labels are never physical bullet targets. */mesh.raycast=()=>{};mesh.position.set(x,y,z);parent.add(mesh);if(solid)blocks.push({x,z,w:w/2,d:d/2,bottom:y-h/2,top:y+h/2});return mesh}
  function label(text,x,y,z,size=16,parent=scene){const canvas=document.createElement('canvas');canvas.width=640;canvas.height=96;const ctx=canvas.getContext('2d');ctx.fillStyle='#10212be6';ctx.fillRect(0,0,640,96);ctx.fillStyle='#e3f6e8';ctx.font='bold 30px sans-serif';ctx.textAlign='center';ctx.fillText(text,320,62,620);const mesh=new T.Sprite(new T.SpriteMaterial({map:new T.CanvasTexture(canvas),depthTest:true}));mesh.position.set(x,y,z);mesh.scale.set(size,size*.15,1);parent.add(mesh);return mesh}
  function batch(parts,material,parent){const mesh=new T.InstancedMesh(new T.BoxGeometry(1,1,1),material,parts.length),dummy=new T.Object3D();parts.forEach((p,i)=>{dummy.position.set(p.x,p.y,p.z);dummy.scale.set(p.w,p.h,p.d);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix)});mesh.computeBoundingSphere();parent.add(mesh)}
  function station(n,parent){if(api.citySpec){cube(150,.2,110,n.x,0,n.z+20,materials.white,parent);cube(150,.4,110,n.x,8,n.z+20,materials.blue,parent);cube(.5,8,110,n.x-75,4,n.z+20,materials.window,parent,true);cube(.5,8,110,n.x+75,4,n.z+20,materials.window,parent,true);cube(150,8,.5,n.x,4,n.z-35,materials.window,parent,true);for(const side of [-1,1])cube(64,8,.5,n.x+side*43,4,n.z+75,materials.window,parent,true);for(let i=-2;i<=2;i++)cube(8,1,2,n.x+i*20,.5,n.z+40,materials.dark,parent);cube(8,2,3,n.x+40,1,n.z+5,materials.blue,parent);label(n.name+' 중앙역 · E 지역 간 승차',n.x,12,n.z+70,44,parent);return}cube(24,4,10,n.x,2,n.z,materials.white,parent);cube(27,.4,13,n.x,4.3,n.z,materials.blue,parent);cube(26,.3,4,n.x,.2,n.z+8,materials.dark,parent);label(n.name+'역 · E 승차',n.x,7,n.z,20,parent)}
