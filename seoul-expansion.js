@@ -1,6 +1,6 @@
-import {EXPANDED_CITIES,expansionConnections,expandedCityAt} from './seoul-expansion-data.mjs?v=31';
-import {citySpec} from './city-map-data.mjs?v=31';
-import {sampleRoute} from './core.mjs?v=31';
+import {EXPANDED_CITIES,expansionConnections,expandedCityAt} from './seoul-expansion-data.mjs?v=32';
+import {citySpec} from './city-map-data.mjs?v=32';
+import {sampleRoute} from './core.mjs?v=32';
 export function extendSeoul(T,scene,world,tools){const {part,building,terminal,anchors,facilities,roofSurfaces,signals,lampMat}=tools,{m}=world,regions=[],labels=[],connections=expansionConnections();
  part(80000,.1,80000,0,-.55,0,m.ground);
  const label=(text,x,y,z,size=30)=>{const mesh=world.label(text,x,y,z,'#c7e1c0',size);labels.push(mesh);return mesh};

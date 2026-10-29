@@ -1,7 +1,7 @@
-import {PENINSULA_CITIES as ATLAS_CITIES} from './peninsula-data.mjs?v=31';
-import {freshRegionalLaw,civicSites as atlasSites,registerRegionalCrime,advanceRegionalLaw,regionalDamageAllowed} from './regional-rules.mjs?v=31';
-import {moveBody,blockedAt} from './core.mjs?v=31';
-import {segmentBox} from './civic-sim.mjs?v=31';
+import {PENINSULA_CITIES as ATLAS_CITIES} from './peninsula-data.mjs?v=32';
+import {freshRegionalLaw,civicSites as atlasSites,registerRegionalCrime,advanceRegionalLaw,regionalDamageAllowed} from './regional-rules.mjs?v=32';
+import {moveBody,blockedAt} from './core.mjs?v=32';
+import {segmentBox} from './civic-sim.mjs?v=32';
 export function buildRegionalCivic(T,scene,blocks,api){const PENINSULA_CITIES=api.cities||ATLAS_CITIES,civicSites=id=>api.sites||atlasSites(id);let currentRoot=scene;const structures=[];const actors=[],officers=[],guards=[],responders=[],gates=new Map(),records=api.lawRecords||new Map(),fires=new Map();let time=0,serial=-1,lastStash=false,roofReturn=null,lastStage='free';const mat=color=>new T.MeshStandardMaterial({color}),white=mat(0xc4c9c5),blue=mat(0x637f94),dark=mat(0x34434b),red=mat(0xa85444);
  const uid=()=>api.uid?.()||'solo',ensure=(id=uid())=>{if(!records.has(id))records.set(id,freshRegionalLaw());return records.get(id)},nearest=p=>PENINSULA_CITIES.reduce((a,b)=>Math.hypot(a.x-p.x,a.z-p.z)<Math.hypot(b.x-p.x,b.z-p.z)?a:b);
  function box(w,h,d,x,y,z,material=white,solid=false){const mesh=new T.Mesh(new T.BoxGeometry(w,h,d),material);mesh.position.set(x,y,z);currentRoot.add(mesh);if(solid){const block={x,z,w:w/2,d:d/2,bottom:y-h/2,top:y+h/2,civic:true};blocks.push(block);mesh.userData.block=block}return mesh}

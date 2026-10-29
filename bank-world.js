@@ -1,5 +1,5 @@
-import {EXPANDED_CITIES} from './seoul-expansion-data.mjs?v=31';
-import {blockedAt,groundHeight} from './core.mjs?v=31';
+import {EXPANDED_CITIES} from './seoul-expansion-data.mjs?v=32';
+import {blockedAt,groundHeight} from './core.mjs?v=32';
 export function buildBanks(T,scene,world,metropolis){const banks=[];const {m}=world;
  for(const [index,city]of EXPANDED_CITIES.entries()){const anchor=city.id==='seoul'?{x:550,z:-400}:{x:city.x-180,z:city.z+280};let plot=null;for(let r=0;r<=480&&!plot;r+=32)for(let n=0;n<16;n++){const x=anchor.x+Math.cos(n*Math.PI/8)*r,z=anchor.z+Math.sin(n*Math.PI/8)*r;if(!blockedAt(x,z,25,world.blocks)&&groundHeight(x,z)<1){plot={x,z};break}}if(!plot)throw Error(city.name+' 은행 부지를 찾지 못했습니다.');const {x,z}=plot,root=new T.Group();scene.add(root);
   function box(w,h,d,px,y,pz,mat,solid=false){const mesh=world.cube(w,h,d,px,y,pz,mat,false,root);if(solid)world.blocks.push({x:px,z:pz,w:w/2,d:d/2,bottom:y-h/2,top:y+h/2,kind:'bank'});return mesh}

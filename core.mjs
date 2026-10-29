@@ -1,5 +1,5 @@
-import {EXPANDED_LIMIT,expandedCityAt} from './seoul-expansion-data.mjs?v=31';
-import {areaAt,AIRPORTS} from './atlas-data.mjs?v=31';
+import {EXPANDED_LIMIT,expandedCityAt} from './seoul-expansion-data.mjs?v=32';
+import {areaAt,AIRPORTS} from './atlas-data.mjs?v=32';
 // Pure simulation rules shared by the game and its regression checks.
 export const LIMIT=EXPANDED_LIMIT;
 export const DISTRICTS=[

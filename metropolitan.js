@@ -1,7 +1,7 @@
-import {extendSeoul} from './seoul-expansion.js?v=31';
-import {SEOUL_AREAS,AIRPORTS} from './atlas-data.mjs?v=31';
-import {BRIDGES,HILLS,groundHeight,blockedAt,sampleRoute} from './core.mjs?v=31';
-import {signalState} from './city-sim.mjs?v=31';
+import {extendSeoul} from './seoul-expansion.js?v=32';
+import {SEOUL_AREAS,AIRPORTS} from './atlas-data.mjs?v=32';
+import {BRIDGES,HILLS,groundHeight,blockedAt,sampleRoute} from './core.mjs?v=32';
+import {signalState} from './city-sim.mjs?v=32';
 export function buildMetropolitan(T,scene,world){
  const {m}=world,chunks=new Map(),facilities=[],signals=[],parks=[],anchors=[],ambientPlanes=[],roofSurfaces=[];let buildings=0,seed=63026;
  const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
