@@ -1,9 +1,9 @@
-import {PENINSULA_CITIES as ATLAS_CITIES} from './peninsula-data.mjs?v=29';
-import {interestRows} from './network-performance.mjs?v=29';
-import {createNorthernForce,advanceFront,captureAllowed,COMMAND_POST,GAME_FRONT} from './front-sim.mjs?v=29';
-import {moveBody,blockedAt,WEAPONS} from './core.mjs?v=29';
-import {segmentBox} from './civic-sim.mjs?v=29';
-import {peninsulaLandAt} from './peninsula-data.mjs?v=29';
+import {PENINSULA_CITIES as ATLAS_CITIES} from './peninsula-data.mjs?v=30';
+import {interestRows} from './network-performance.mjs?v=30';
+import {createNorthernForce,advanceFront,captureAllowed,COMMAND_POST,GAME_FRONT} from './front-sim.mjs?v=30';
+import {moveBody,blockedAt,WEAPONS} from './core.mjs?v=30';
+import {segmentBox} from './civic-sim.mjs?v=30';
+import {peninsulaLandAt} from './peninsula-data.mjs?v=30';
 export function buildPeninsulaCombat(T,scene,camera,blocks,api){const PENINSULA_CITIES=api.cities||ATLAS_CITIES,makeArmy=()=>api.createArmy?.()||createNorthernForce();
  let army=makeArmy(),trigger=false,cooldown=0,reloadTime=0,reloadWeapon=0,strategicClock=0,nearClock=0,captureTime=0,capturing=false,secured=false,kills=0,recoil=0,lastDamage=-100,time=0;const encounters=new Set(),extras=[],allySlots=[],extraSlots=[];const allies=api.createAllies?.()||Array.from({length:50},(_,i)=>{const c=PENINSULA_CITIES[Math.floor(i/2)%23];return {id:500+i,role:'ally',x:c.x-8+(i%2)*8,y:0,z:c.z+32,hp:100,ammo:12,reloading:0,cool:1,yaw:0,death:0,moving:false,city:c.id}});const effects=[],slots=[],MAX=64,$=id=>document.getElementById(id);const material=color=>new T.MeshStandardMaterial({color,roughness:.85});const olive=material(0x536242),skin=material(0xaf977b),dark=material(0x26332a),blue=material(0x5b91a5),securedMaterial=material(0x98eea3),dummy=new T.Object3D();
  const parts=[{w:.6,h:.7,d:.38,y:1.15,m:olive},{w:.35,h:.35,d:.35,y:1.75,m:skin},{w:.44,h:.18,d:.42,y:1.96,m:dark},{w:.22,h:.8,d:.25,x:-.18,y:.45,m:olive,leg:1},{w:.22,h:.8,d:.25,x:.18,y:.45,m:olive,leg:-1},{w:.75,h:.25,d:.3,y:1.25,z:-.15,m:olive},{w:.15,h:.18,d:.9,x:.24,y:1.18,z:-.48,m:dark}];

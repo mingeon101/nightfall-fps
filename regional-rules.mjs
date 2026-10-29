@@ -1,4 +1,4 @@
-import {PENINSULA_CITIES} from './peninsula-data.mjs?v=29';
+import {PENINSULA_CITIES} from './peninsula-data.mjs?v=30';
 export const REGIONAL_TYPES=['car','tank','helicopter','fighter','plane'];
 export function createRegionalFleet(){return PENINSULA_CITIES.flatMap((c,k)=>[...REGIONAL_TYPES.map((type,i)=>({id:k*8+i,type,x:c.x+20+(i%3)*16,z:c.z+(type==='car'?25:55+Math.floor(i/3)*18),y:0,yaw:0,hp:type==='tank'?650:400,speed:0,hostile:false,occupied:false,destroyed:false,traffic:type==='car',city:c.id,heatAmmo:4,flareAmmo:6})),...['tank','helicopter','fighter'].map((type,i)=>({id:k*8+5+i,type,x:c.x-60+i*15,z:c.z+60,y:0,yaw:Math.PI,hp:type==='tank'?650:400,speed:0,hostile:true,deployed:false,occupied:false,destroyed:false,traffic:false,city:c.id,cool:4}))]).concat(Array.from({length:4},(_,i)=>({id:184+i,type:'car',x:0,z:0,y:0,yaw:0,hp:650,speed:0,service:true,hostile:false,occupied:false,destroyed:false,traffic:false,city:'seoul'})))}
 export function freshRegionalLaw(){return {civilianKills:0,justice:'free',justiceTime:0,city:'seoul',serial:0,stash:false,escaped:false}}

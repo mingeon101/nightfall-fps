@@ -1,4 +1,4 @@
-import {EXPANDED_CITIES} from './seoul-expansion-data.mjs?v=29';
+import {EXPANDED_CITIES} from './seoul-expansion-data.mjs?v=30';
 export const PYONGYANG=EXPANDED_CITIES.find(c=>c.id==='pyongyang');
 export const PRESIDENT_HOME={x:PYONGYANG.x+140,z:PYONGYANG.z-200};
 export const PRESIDENT_ROUTE=[[140,-130],[230,-100],[230,120],[110,120],[110,-90],[230,-90]].map(([x,z])=>({x:PYONGYANG.x+x,z:PYONGYANG.z+z}));

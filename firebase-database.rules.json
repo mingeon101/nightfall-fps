@@ -160,6 +160,23 @@
             "$other": {
               ".validate": false
             }
+          },
+          "supplies": {
+            ".validate": "newData.hasChildren(['medkit','armor'])",
+            "medkit": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10 && newData.val() % 1 === 0"
+            },
+            "armor": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10 && newData.val() % 1 === 0"
+            },
+            "$other": {
+              ".validate": false
+            }
+          },
+          "bankCooldowns": {
+            "$city": {
+              ".validate": "$city.matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason)$/) && newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000000 && newData.val() % 1 === 0"
+            }
           }
         },
         "$other": {
