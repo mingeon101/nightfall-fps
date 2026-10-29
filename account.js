@@ -1,5 +1,5 @@
-import {firebaseConfig} from './firebase-config.js?v=30';
-import {normalizeSave,normalizePhone,localSaveKey,shouldWriteRevision} from './save-data.mjs?v=30';
+import {firebaseConfig} from './firebase-config.js?v=31';
+import {normalizeSave,normalizePhone,localSaveKey,shouldWriteRevision} from './save-data.mjs?v=31';
 const $=id=>document.getElementById(id);
 let auth,db,api,user=null,confirmation=null,verifier=null,epoch=0,revision=0,ready=false,loading=false,saving=false,cloudSave=null,cooldown=0,returnToGame=false,anonymousPending=false;
 function status(text){$('accountstatus').textContent=text}

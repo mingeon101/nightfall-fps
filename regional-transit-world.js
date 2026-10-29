@@ -1,5 +1,5 @@
-import {PENINSULA_CITIES as ATLAS_CITIES} from './peninsula-data.mjs?v=30';
-import {signalState} from './city-sim.mjs?v=30';
+import {PENINSULA_CITIES as ATLAS_CITIES} from './peninsula-data.mjs?v=31';
+import {signalState} from './city-sim.mjs?v=31';
 export function buildRegionalTransit(T,scene,api){const cities=api.cities||ATLAS_CITIES,buses=new Map(),platforms=new Map(),signals=[],mat=color=>new T.MeshStandardMaterial({color}),gray=mat(0x536b75),glass=mat(0x8bb7c5),red=mat(0xa65848),yellow=mat(0xe7be62),green=mat(0x70dc93),dark=mat(0x24323a),white=mat(0xcbd6d6);let time=0;
  function box(w,h,d,x,y,z,m,parent){const mesh=new T.Mesh(new T.BoxGeometry(w,h,d),m);mesh.position.set(x,y,z);parent.add(mesh);return mesh}
  function createStop(c,key,stop,index){const shelter=new T.Group();shelter.position.set(stop.x,0,stop.z);scene.add(shelter);box(6,.3,3,0,3,0,gray,shelter);box(.2,3,.2,-2.8,1.5,0,gray,shelter);box(4,.7,.6,0,.35,1,gray,shelter);box(1.5,1,.2,3,2,0,yellow,shelter);const bus=new T.Group();scene.add(bus);box(3,2.6,9,0,1.8,0,red,bus);box(3.1,1,8,0,2.2,0,glass,bus);for(const x of [-1.4,1.4])for(const z of [-3,3])box(.5,.8,.8,x,.6,z,dark,bus);const door=box(.15,2,1.5,1.55,1.5,-2,white,bus);bus.visible=false;buses.set(key,{key,c,stop,index,root:bus,door,shelter,phase:'idle',clock:0})}

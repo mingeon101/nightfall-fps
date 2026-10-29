@@ -1,4 +1,4 @@
-import {CITY_IDS} from './city-map-data.mjs?v=30';
+import {CITY_IDS} from './city-map-data.mjs?v=31';
 export const SUPPLY_LIMIT=10,BANK_DURATION=8,BANK_COOLDOWN=300;
 export const SUPPLIES={medkit:{name:'구급상자',cost:8000},armor:{name:'방호복 · 방탄복',cost:12000}};
 export function normalizeSupplies(raw){const count=v=>Number.isFinite(v)?Math.max(0,Math.min(SUPPLY_LIMIT,Math.floor(v))):0;return {medkit:count(raw?.medkit),armor:count(raw?.armor)}}

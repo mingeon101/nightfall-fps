@@ -1,6 +1,6 @@
-import {expandedCityAt} from './seoul-expansion-data.mjs?v=30';
-import {STATIONS,routeLength,blockedAt,groundHeight,BRIDGES} from './core.mjs?v=30';
-import {BUS_STOPS,BUS_ROUTE} from './transport.mjs?v=30';
+import {expandedCityAt} from './seoul-expansion-data.mjs?v=31';
+import {STATIONS,routeLength,blockedAt,groundHeight,BRIDGES} from './core.mjs?v=31';
+import {BUS_STOPS,BUS_ROUTE} from './transport.mjs?v=31';
 export function configureRegionalTransit(anchors,blocks=[]){
  if(STATIONS.some(s=>s.regional))return;
  for(const s of STATIONS)if(!s.lines.includes(3))s.lines.push(3);
