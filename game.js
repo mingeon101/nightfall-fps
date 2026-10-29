@@ -1,26 +1,26 @@
-import {buildPyongyangOperation} from './operation-world.js?v=28';
-import {buildAtmosphere} from './atmosphere-world.js?v=28';
-import {installFieldPhone} from './phone-ui.js?v=28';
-import {buildAttackDrones} from './drone-system.js?v=28';
-import {EXPANDED_CITIES,expandedCityAt} from './seoul-expansion-data.mjs?v=28';
-import {PLAYER_MAX_HEALTH,canReceiveAttack} from './player-rules.mjs?v=28';
-import {buildPeninsula} from './city-world-manager.js?v=28';
-import {frameCounter} from './performance-metrics.mjs?v=28';
-import {interestRows,simulationNearby,simulationDue,angleStep} from './network-performance.mjs?v=28';
-import {buildAirWeapons} from './air-weapons.js?v=28';
-import {installMultiplayer} from './multiplayer.js?v=28';
-import {buildCivic} from './civic-world.js?v=28';
-import {ENEMY_COUNT,ALLY_COUNT,CombatIndex,patrolOffset,aiInterval} from './combat-sim.mjs?v=28';
-import {installMobileControls} from './mobile-controls.js?v=28';
-import {normalizeSave} from './save-data.mjs?v=28';
-import {buildMetropolitan,buildAircraft} from './metropolitan.js?v=28';
-import {configureRegionalTransit} from './regional-transit.mjs?v=28';
-import {stepTraffic,SHOP_ITEMS,purchaseItem} from './city-sim.mjs?v=28';
-import {SEOUL_AREAS,AIRPORTS} from './atlas-data.mjs?v=28';
-import {buildTransport,slideDoors} from './transit-world.js?v=28';
-import {BUS_STOPS,PLATFORM_PHASES,createMetroJourney,stepMetro,boardMetro,alightMetro,createBusService,requestBus,busRemaining,stepBus,boardBus,alightBus,busPosition} from './transport.mjs?v=28';
-import {buildWorld} from './world.js?v=28';
-import {DISTRICTS,STATIONS,WEAPONS,VEHICLE_TYPES,clamp,groundHeight,districtAt,blockedAt,moveBody,lineBlocked,damageVitals,routeLength,sampleRoute,transitRoute,chooseExit,vehicleStep,BRIDGES,HILLS} from './core.mjs?v=28';
+import {buildPyongyangOperation} from './operation-world.js?v=29';
+import {buildAtmosphere} from './atmosphere-world.js?v=29';
+import {installFieldPhone} from './phone-ui.js?v=29';
+import {buildAttackDrones} from './drone-system.js?v=29';
+import {EXPANDED_CITIES,expandedCityAt} from './seoul-expansion-data.mjs?v=29';
+import {PLAYER_MAX_HEALTH,canReceiveAttack} from './player-rules.mjs?v=29';
+import {buildPeninsula} from './city-world-manager.js?v=29';
+import {frameCounter} from './performance-metrics.mjs?v=29';
+import {interestRows,simulationNearby,simulationDue,angleStep} from './network-performance.mjs?v=29';
+import {buildAirWeapons} from './air-weapons.js?v=29';
+import {installMultiplayer} from './multiplayer.js?v=29';
+import {buildCivic} from './civic-world.js?v=29';
+import {ENEMY_COUNT,ALLY_COUNT,CombatIndex,patrolOffset,aiInterval} from './combat-sim.mjs?v=29';
+import {installMobileControls} from './mobile-controls.js?v=29';
+import {normalizeSave} from './save-data.mjs?v=29';
+import {buildMetropolitan,buildAircraft} from './metropolitan.js?v=29';
+import {configureRegionalTransit} from './regional-transit.mjs?v=29';
+import {stepTraffic,SHOP_ITEMS,purchaseItem} from './city-sim.mjs?v=29';
+import {SEOUL_AREAS,AIRPORTS} from './atlas-data.mjs?v=29';
+import {buildTransport,slideDoors} from './transit-world.js?v=29';
+import {BUS_STOPS,PLATFORM_PHASES,createMetroJourney,stepMetro,boardMetro,alightMetro,createBusService,requestBus,busRemaining,stepBus,boardBus,alightBus,busPosition} from './transport.mjs?v=29';
+import {buildWorld} from './world.js?v=29';
+import {DISTRICTS,STATIONS,WEAPONS,VEHICLE_TYPES,clamp,groundHeight,districtAt,blockedAt,moveBody,lineBlocked,damageVitals,routeLength,sampleRoute,transitRoute,chooseExit,vehicleStep,BRIDGES,HILLS} from './core.mjs?v=29';
 const $=id=>document.getElementById(id);
 let multiplayer=null,soloBackup=null,networkWorld=null,vehicleClaimPending=false;const networkPeers=new Map(),networkFires=new Map(),networkActors=new Set();let networkClaims={};
 const inRoom=()=>multiplayer?.session;
@@ -83,12 +83,12 @@ const line1Route=[STATIONS[0],STATIONS[1],STATIONS[0]],line2Route=[...STATIONS,S
 function message(text,duration=3){$('notice').textContent=text;noticeTime=duration}
 function sound(kind,volume=1){try{audio??=new (window.AudioContext||window.webkitAudioContext)();audio.resume();const o=audio.createOscillator(),g=audio.createGain();o.connect(g);g.connect(audio.destination);o.type=kind==='shot'||kind==='cannon'?'sawtooth':'sine';o.frequency.setValueAtTime(kind==='shot'?150:kind==='cannon'?65:kind==='hit'?750:260,audio.currentTime);o.frequency.exponentialRampToValueAtTime(35,audio.currentTime+.14);g.gain.setValueAtTime((kind==='shot'?.08:.04)*volume,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.18);o.start();o.stop(audio.currentTime+.19)}catch{}}
 function tracer(a,b,color=0xffd88d){const radius=mobileMode?450:800;if(effects.length>160||Math.min(Math.hypot(a.x-player.x,a.z-player.z),Math.hypot(b.x-player.x,b.z-player.z))>radius)return;const line=new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(a.x,a.y,a.z),new T.Vector3(b.x,b.y,b.z)]),new T.LineBasicMaterial({color,transparent:true,opacity:.8}));scene.add(line);effects.push({line,time:.12})}
-function updateHud(){const w=WEAPONS[selected],item=inventory[selected];$('hp').textContent=Math.ceil(player.health);$('armor').textContent=Math.ceil(player.armor);$('healthbar').style.width=(player.health/PLAYER_MAX_HEALTH*100)+'%';$('ammo').textContent=String(item.ammo).padStart(2,'0');$('reserve').textContent=' / '+item.reserve;$('weaponname').textContent=w.name;$('kills').textContent=`북한군 ${String(enemies.length-kills).padStart(2,'0')} / ${enemies.length} · ALLIES ${allies.filter(a=>a.hp>0).length}/${ALLY_COUNT}`;$('gear').textContent=inventory.map((it,i)=>it.owned?`${i+1} ${WEAPONS[i].name.split(' ')[0]}`:null).filter(Boolean).join(' · ');$('district').textContent=districtAt(player.x,player.z);$('objective').textContent=operation.state.phase>0?(operation.state.phase===3?'평양 가상 대통령 제거 · 임무 성공':operation.state.phase===2?'평양 작전 · 대통령 도주 / 비밀경호국 경보':'평양 잠입 · P 휴대폰에서 작전 확인'):elapsed<60?'적 장비 출격까지 '+Math.ceil(60-elapsed)+'초 · 5 RPG':kills===enemies.length?'도시 확보 완료 · 자유롭게 탐색하세요':'네 지구의 적을 제압하라 · 민간인 구역';$('civicstatus').textContent='작전: 한반도 북한군 남하 저지'+' · 민간인 사상 '+civic.state.civilianKills+'/15 · '+({free:'수배 없음',wanted:'경찰 추격',station:'경찰서 조사',court:'법원 판결',prison:'교도소 수감'}[civic.state.justice]);$('reloadhint').textContent=reload>0?'재장전 중…':currentVehicle?'E 하차 · SPACE 상승 · C 하강':'B 공격 드론 · R 재장전 · 1–5 무기 변경'}
+function updateHud(){const w=WEAPONS[selected],item=inventory[selected];$('hp').textContent=Math.ceil(player.health);$('armor').textContent=Math.ceil(player.armor);$('healthbar').style.width=(player.health/PLAYER_MAX_HEALTH*100)+'%';$('ammo').textContent=String(item.ammo).padStart(2,'0');$('reserve').textContent=' / '+item.reserve;$('weaponname').textContent=w.name;$('kills').textContent=`북한군 ${String(enemies.length-kills).padStart(2,'0')} / ${enemies.length} · ALLIES ${allies.filter(a=>a.hp>0).length}/${ALLY_COUNT}`;$('gear').textContent=inventory.map((it,i)=>it.owned?`${i+1} ${WEAPONS[i].name.split(' ')[0]}`:null).filter(Boolean).join(' · ');$('district').textContent=districtAt(player.x,player.z);$('objective').textContent=operation.state.phase>0?(operation.state.phase===3?'평양 가상 대통령 제거 · 임무 성공':operation.state.phase===2?'평양 작전 · '+(operation.mode==='tunnel'?'땅굴 대피':operation.mode==='car'?'전용 차량 도주':'도보 도주')+' / 밀착 경호':'평양 잠입 · P 휴대폰에서 작전 확인'):elapsed<60?'적 장비 출격까지 '+Math.ceil(60-elapsed)+'초 · 5 RPG':kills===enemies.length?'도시 확보 완료 · 자유롭게 탐색하세요':'네 지구의 적을 제압하라 · 민간인 구역';$('civicstatus').textContent='작전: 한반도 북한군 남하 저지'+' · 민간인 사상 '+civic.state.civilianKills+'/15 · '+({free:'수배 없음',wanted:'경찰 추격',station:'경찰서 조사',court:'법원 판결',prison:'교도소 수감'}[civic.state.justice]);$('reloadhint').textContent=reload>0?'재장전 중…':currentVehicle?'E 하차 · SPACE 상승 · C 하강':'B 공격 드론 · R 재장전 · 1–5 무기 변경'}
 function equip(index){if(!inventory[index].owned){message('아직 획득하지 않은 무기입니다. 지도에서 아이템을 찾으세요.');return}selected=index;reload=0;fireCooldown=.2;scope.visible=index===3;sight.visible=index!==3;barrel.scale.z=index===4?2:index===3?1.6:index===1?.65:1;barrel.scale.x=barrel.scale.y=index===4?3:1;updateHud()}
 function doReload(){if(!active||trip||busRide||currentVehicle||reload>0)return;const w=WEAPONS[selected],item=inventory[selected];if(item.ammo===w.mag)return;if(!item.reserve){message('예비 탄약이 없습니다. 탄약 상자를 찾으세요.');return}reload=w.reload;message('재장전 중…',w.reload);sound('reload');updateHud()}
 function damage(amount,origin=null){if(regionalFlight)return;if(trip||busRide||!active||ended||!canReceiveAttack(civic.state.justice,origin))return;const result=damageVitals(player.health,player.armor,amount*(currentVehicle?.type==='tank'?.18:currentVehicle?.type==='car'?.65:1));Object.assign(player,result);lastDamage=elapsed;hurt=.45;updateHud();if(player.health<=0)finish()}
 function kill(e){if(e.hp<=0&&e.death>0)return;e.hp=0;e.death=.001;e.reloading=0;e.muzzle.visible=false;if(e.vehicle){const v=e.vehicle;v.destroyed=true;v.occupied=false;v.root.visible=false;e.root.position.set(v.x,groundHeight(v.x,v.z),v.z)}kills++;if(kills===enemies.length){message('도시 확보 완료 · 모든 적 제압',8);$('radio').textContent='작전 성공. 도시의 교통과 시설을 계속 탐색할 수 있다.'}else message(`적 제압 ${kills} / ${enemies.length}`);if(e.role==='fictional-president')message('가상 북측 대통령 제거 확인 · 평양 임무 성공',8);updateHud()}
-function damageVehicle(v,amount){if(v.destroyed||(v.hostile&&!v.deployed))return;if(v.enemyPilot){v.enemyPilot.hp-=amount;message(VEHICLE_TYPES[v.type].name+' 명중 · 장갑 '+Math.max(0,Math.ceil(v.enemyPilot.hp)),1);if(v.enemyPilot.hp<=0)kill(v.enemyPilot)}else{v.hp-=amount;if(v.hp<=0){if(v.allyPilot)killAlly(v.allyPilot);v.destroyed=true;v.occupied=false;v.root.visible=false;message(VEHICLE_TYPES[v.type].name+' 파괴')}}hit=.16;sound('hit')}
+function damageVehicle(v,amount){if(v.destroyed||(v.hostile&&!v.deployed))return;if(v.enemyPilot){v.enemyPilot.hp-=amount;message(VEHICLE_TYPES[v.type].name+' 명중 · 장갑 '+Math.max(0,Math.ceil(v.enemyPilot.hp)),1);if(v.enemyPilot.hp<=0)kill(v.enemyPilot)}else{v.hp-=amount;if(v.hp<=0){if(v.allyPilot)killAlly(v.allyPilot);v.destroyed=true;v.occupied=false;v.root.visible=false;message(VEHICLE_TYPES[v.type].name+' 파괴')}}operation.carDestroyed(v);hit=.16;sound('hit')}
 function applyImpact(impact,amount){let o=impact.object,actor=null,vehicle=null;while(o&&!actor&&!vehicle){actor=o.userData.actor;vehicle=o.userData.vehicle;o=o.parent}if(vehicle||actor?.vehicle){damageVehicle(vehicle||actor.vehicle,amount);return}if(!actor||actor.hp<=0)return;actor.hp-=amount*(actor.enemy&&impact.point.y-actor.root.position.y>1.53?2.5:1);operation.noteHit(actor);hit=.16;actor.flee=10;sound('hit');if(actor.hp<=0){if(actor.enemy)kill(actor);else if(actor.ally)killAlly(actor);else{actor.hp=0;actor.death=.001;civic.death(actor);if(!actor.role)message('민간인 사상 · 적 제압 수에는 포함되지 않습니다.')}}}
 function launchRocket(visualOnly=false,origin=null,heading=null){if(heading)direction.set(heading.x,heading.y,heading.z);else camera.getWorldDirection(direction);const mesh=new T.Mesh(new T.SphereGeometry(.16,6,4),new T.MeshBasicMaterial({color:0xffc266}));mesh.position.copy(origin||camera.position).addScaledVector(direction,1);scene.add(mesh);const rocket={mesh,dir:direction.clone(),life:8,distance:0,visualOnly};rockets.push(rocket);return rocket}
 function explodeRocket(point,visualOnly=false){if(visualOnly){const blast=new T.Mesh(new T.SphereGeometry(4,10,8),new T.MeshBasicMaterial({color:0xffa340,transparent:true,opacity:.65}));blast.position.copy(point);scene.add(blast);effects.push({line:blast,time:.25});return}for(const b of blocks)if(b.top>3&&b.kind!=='water'&&Math.hypot(Math.max(0,Math.abs(point.x-b.x)-b.w),Math.max(0,point.y-b.top,b.bottom-point.y),Math.max(0,Math.abs(point.z-b.z)-b.d))<7)civic.ignite({block:b,point},770);const blast=new T.Mesh(new T.SphereGeometry(4,10,8),new T.MeshBasicMaterial({color:0xffa340,transparent:true,opacity:.65}));blast.position.copy(point);scene.add(blast);effects.push({line:blast,time:.25});for(const v of vehicles){if(v===currentVehicle||v.destroyed||(v.hostile&&!v.deployed))continue;const center={x:v.x,y:v.y+2,z:v.z},d=Math.hypot(point.x-center.x,point.y-center.y,point.z-center.z);if(d<12&&!lineBlocked(point,center,blocks))damageVehicle(v,770*(1-d/18))}for(const p of people){if(p.hp<=0||p.vehicle)continue;const center={x:p.root.position.x,y:1+p.root.position.y,z:p.root.position.z},d=Math.hypot(point.x-center.x,point.y-center.y,point.z-center.z);if(d<9&&!lineBlocked(point,center,blocks))applyImpact({object:p.root,point:new T.Vector3(center.x,center.y,center.z)},330*(1-d/12))}}

@@ -1,4 +1,4 @@
-import {PENINSULA_CITIES,projectKorea} from './peninsula-data.mjs?v=28';
+import {PENINSULA_CITIES,projectKorea} from './peninsula-data.mjs?v=29';
 // Fictional game front, deliberately schematic: not real military positions/routes.
 export const GAME_FRONT=[[126.55,37.93],[127.25,38.12],[127.8,38.30],[128.36,38.57]].map(([lon,lat])=>projectKorea(lon,lat));
 export const COMMAND_POST={x:-1040,z:-870,name:'북부 가상 지휘소'};
