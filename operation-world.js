@@ -1,5 +1,5 @@
-import {PYONGYANG,PRESIDENT_HOME,PRESIDENT_ROUTE,freshOperation,sanitizeOperation,advanceOperation,tunnelPoint,tunnelProgress,escortPoint} from './pyongyang-mission.mjs?v=32';
-import {moveBody,lineBlocked} from './core.mjs?v=32';
+import {PYONGYANG,PRESIDENT_HOME,PRESIDENT_ROUTE,freshOperation,sanitizeOperation,advanceOperation,tunnelPoint,tunnelProgress,escortPoint} from './pyongyang-mission.mjs?v=33';
+import {moveBody,lineBlocked} from './core.mjs?v=33';
 export function buildPyongyangOperation(T,scene,world,metropolis,api){
  const selected=api.enemies.slice(483,500).filter(a=>!a.vehicle&&!a.assemblyGuard),leader=selected.at(-1),guards=selected.slice(0,-1);let state=freshOperation();
  // Reuse an existing local car so vehicle IDs and the multiplayer schema stay stable.

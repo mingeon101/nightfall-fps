@@ -1,4 +1,4 @@
-import {clamp,routeLength,sampleRoute,transitRoute} from './core.mjs?v=32';
+import {clamp,routeLength,sampleRoute,transitRoute} from './core.mjs?v=33';
 export const BUS_ROUTE=[{x:-236,z:-136},{x:236,z:-136},{x:236,z:136},{x:-236,z:136},{x:-236,z:-136}];
 export const BUS_STOPS=[
  {id:'jongno',name:'종로·광화문',x:-190,z:-122,dockX:-190,dockZ:-136,distance:46},
@@ -7,7 +7,7 @@ export const BUS_STOPS=[
  {id:'yeouido',name:'여의도·서초',x:-190,z:122,dockX:-190,dockZ:136,distance:1170}
 ];
 export const PLATFORM_PHASES=['approach','boarding','exit'];
-export function createMetroJourney(from,to,line){const path=transitRoute(from.id,to.id,line);if(!path)return null;return {from,to,line,path,total:routeLength(path),distance:0,phase:'approach',clock:0,doors:0,platformX:6,platformZ:0,arrivingOffset:48}}
+export function createMetroJourney(from,to,line){if((from.country||'korea')!==(to.country||'korea'))return null;const path=transitRoute(from.id,to.id,line);if(!path)return null;return {from,to,line,path,total:routeLength(path),distance:0,phase:'approach',clock:0,doors:0,platformX:6,platformZ:0,arrivingOffset:48}}
 export function stepMetro(j,dt){
  j.clock+=dt;
  if(j.phase==='approach'){j.arrivingOffset=Math.max(0,48*(1-clamp(j.clock/5,0,1))**2);if(j.clock>=5){j.phase='boarding';j.clock=0}}

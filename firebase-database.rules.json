@@ -29,10 +29,10 @@
           "player": {
             ".validate": "newData.hasChildren(['x','z','health','armor','wallet'])",
             "x": {
-              ".validate": "newData.isNumber() && newData.val() >= -39990 && newData.val() <= 39990"
+              ".validate": "newData.isNumber() && newData.val() >= -179990 && newData.val() <= 179990"
             },
             "z": {
-              ".validate": "newData.isNumber() && newData.val() >= -39990 && newData.val() <= 39990"
+              ".validate": "newData.isNumber() && newData.val() >= -179990 && newData.val() <= 179990"
             },
             "health": {
               ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 500"
@@ -67,7 +67,7 @@
           },
           "defeatedEnemyIds": {
             "$index": {
-              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 999 && newData.val() % 1 === 0"
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 2499 && newData.val() % 1 === 0"
             }
           },
           "$other": {
@@ -97,7 +97,7 @@
               ".validate": false
             },
             "city": {
-              ".validate": "newData.isString() && newData.val().matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason)$/)"
+              ".validate": "newData.isString() && newData.val().matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason|beijing|shanghai|guangzhou|shenzhen|xian|chengdu|chongqing|wuhan|tokyo|osaka|kyoto|nagoya|sapporo|sendai|hiroshima|fukuoka)$/)"
             },
             "serial": {
               ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000000"
@@ -110,14 +110,14 @@
             ".validate": "newData.isString() && newData.val().matches(/^(seoul|peninsula)$/)"
           },
           "cityId": {
-            ".validate": "newData.isString() && newData.val().matches(/^(legacy|seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason)$/)"
+            ".validate": "newData.isString() && newData.val().matches(/^(legacy|seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason|beijing|shanghai|guangzhou|shenzhen|xian|chengdu|chongqing|wuhan|tokyo|osaka|kyoto|nagoya|sapporo|sendai|hiroshima|fukuoka)$/)"
           },
           "cityProgress": {
             "$city": {
-              ".validate": "$city.matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason)$/) && newData.hasChildren(['operation','playSeconds'])",
+              ".validate": "$city.matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason|beijing|shanghai|guangzhou|shenzhen|xian|chengdu|chongqing|wuhan|tokyo|osaka|kyoto|nagoya|sapporo|sendai|hiroshima|fukuoka)$/) && newData.hasChildren(['operation','playSeconds'])",
               "defeatedEnemyIds": {
                 "$index": {
-                  ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 999 && newData.val() % 1 === 0"
+                  ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 2499 && newData.val() % 1 === 0"
                 }
               },
               "operation": {
@@ -175,13 +175,19 @@
           },
           "bankCooldowns": {
             "$city": {
-              ".validate": "$city.matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason)$/) && newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000000 && newData.val() % 1 === 0"
+              ".validate": "$city.matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason|beijing|shanghai|guangzhou|shenzhen|xian|chengdu|chongqing|wuhan|tokyo|osaka|kyoto|nagoya|sapporo|sendai|hiroshima|fukuoka)$/) && newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000000 && newData.val() % 1 === 0"
             }
           },
           "command": {
             ".validate": "newData.hasChildren(['0','1','2','3','4','5']) && newData.child('0').val() <= 6 && newData.child('3').val() <= 5 && newData.child('5').val() <= 2",
             "$n": {
               ".validate": "$n.matches(/^[0-5]$/) && newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000000 && (($n !== '0' && $n !== '2' && $n !== '3' && $n !== '5') || newData.val() % 1 === 0)"
+            }
+          },
+          "foreignLeaders": {
+            ".validate": "newData.hasChildren(['0','1','2'])",
+            "$n": {
+              ".validate": "$n.matches(/^[0-2]$/) && newData.isNumber() && newData.val() >= 0 && newData.val() <= 300"
             }
           }
         },
@@ -194,7 +200,7 @@
       ".read": false,
       "$room": {
         ".read": "auth != null && (!data.exists() || (root.child('nightfallRooms').child($room).child('slots/0').val() === auth.uid || root.child('nightfallRooms').child($room).child('slots/1').val() === auth.uid || root.child('nightfallRooms').child($room).child('slots/2').val() === auth.uid || root.child('nightfallRooms').child($room).child('slots/3').val() === auth.uid))",
-        ".write": "auth != null && ((!data.exists() && $room.matches(/^[A-Z2-9]{6}$/) && newData.child('meta/host').val() === auth.uid && newData.child('meta/version').val() === 32 && newData.child('slots/0').val() === auth.uid) || (!newData.exists() && data.child('meta/host').val() === auth.uid))",
+        ".write": "auth != null && ((!data.exists() && $room.matches(/^[A-Z2-9]{6}$/) && newData.child('meta/host').val() === auth.uid && newData.child('meta/version').val() === 33 && newData.child('slots/0').val() === auth.uid) || (!newData.exists() && data.child('meta/host').val() === auth.uid))",
         ".validate": "newData.hasChildren(['meta','slots'])",
         "meta": {
           ".validate": "newData.hasChildren(['host','version','createdAt'])",
@@ -202,7 +208,7 @@
             ".validate": "newData.isString() && newData.val().length <= 128"
           },
           "version": {
-            ".validate": "newData.val() === 32"
+            ".validate": "newData.val() === 33"
           },
           "createdAt": {
             ".validate": "newData.isNumber() && newData.val() <= now"
@@ -215,7 +221,7 @@
         "slots": {
           ".validate": "newData.hasChildren()",
           "$slot": {
-            ".write": "auth != null && $slot.matches(/^[0-3]$/) && ((!newData.exists() && data.val() === auth.uid) || (newData.val() === auth.uid && (!data.exists() || data.val() === auth.uid) && root.child('nightfallRooms').child($room).child('meta/version').val() === 32 && root.child('nightfallRooms').child($room).child('slots/0').exists() && ($slot !== '0' || root.child('nightfallRooms').child($room).child('meta/host').val() === auth.uid)))",
+            ".write": "auth != null && $slot.matches(/^[0-3]$/) && ((!newData.exists() && data.val() === auth.uid) || (newData.val() === auth.uid && (!data.exists() || data.val() === auth.uid) && root.child('nightfallRooms').child($room).child('meta/version').val() === 33 && root.child('nightfallRooms').child($room).child('slots/0').exists() && ($slot !== '0' || root.child('nightfallRooms').child($room).child('meta/host').val() === auth.uid)))",
             ".validate": "$slot.matches(/^[0-3]$/) && newData.isString() && newData.val().length <= 128"
           },
           ".read": "auth != null"
@@ -225,13 +231,13 @@
             ".write": "auth != null && auth.uid === $uid && (!newData.exists() || (root.child('nightfallRooms').child($room).child('slots/0').val() === auth.uid || root.child('nightfallRooms').child($room).child('slots/1').val() === auth.uid || root.child('nightfallRooms').child($room).child('slots/2').val() === auth.uid || root.child('nightfallRooms').child($room).child('slots/3').val() === auth.uid))",
             ".validate": "newData.hasChildren(['x','y','z','yaw','pitch','hp','weapon','active','shot','vehicle','speed','name','updatedAt'])",
             "x": {
-              ".validate": "newData.isNumber() && newData.val() >= -39990 && newData.val() <= 39990"
+              ".validate": "newData.isNumber() && newData.val() >= -179990 && newData.val() <= 179990"
             },
             "y": {
               ".validate": "newData.isNumber() && newData.val() >= -30 && newData.val() <= 600"
             },
             "z": {
-              ".validate": "newData.isNumber() && newData.val() >= -39990 && newData.val() <= 39990"
+              ".validate": "newData.isNumber() && newData.val() >= -179990 && newData.val() <= 179990"
             },
             "yaw": {
               ".validate": "newData.isNumber() && newData.val() >= -1000000 && newData.val() <= 1000000"
@@ -249,7 +255,7 @@
               ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000000"
             },
             "vehicle": {
-              ".validate": "newData.isNumber() && newData.val() >= -1 && newData.val() <= 511"
+              ".validate": "newData.isNumber() && newData.val() >= -1 && newData.val() <= 1023"
             },
             "speed": {
               ".validate": "newData.isNumber() && newData.val() >= -200 && newData.val() <= 200"
@@ -270,7 +276,7 @@
               ".validate": "newData.isBoolean()"
             },
             "city": {
-              ".validate": "newData.isString() && newData.val().matches(/^(legacy|seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason)$/)"
+              ".validate": "newData.isString() && newData.val().matches(/^(legacy|seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason|beijing|shanghai|guangzhou|shenzhen|xian|chengdu|chongqing|wuhan|tokyo|osaka|kyoto|nagoya|sapporo|sendai|hiroshima|fukuoka)$/)"
             }
           }
         },
@@ -292,13 +298,13 @@
               "origin": {
                 ".validate": "newData.hasChildren(['x','y','z'])",
                 "x": {
-                  ".validate": "newData.isNumber() && newData.val() >= -40000 && newData.val() <= 40000"
+                  ".validate": "newData.isNumber() && newData.val() >= -180000 && newData.val() <= 180000"
                 },
                 "y": {
                   ".validate": "newData.isNumber() && newData.val() >= -30 && newData.val() <= 610"
                 },
                 "z": {
-                  ".validate": "newData.isNumber() && newData.val() >= -40000 && newData.val() <= 40000"
+                  ".validate": "newData.isNumber() && newData.val() >= -180000 && newData.val() <= 180000"
                 },
                 "$other": {
                   ".validate": false
@@ -329,7 +335,7 @@
                 ".validate": "newData.isString() && newData.val().matches(/^(stash|capture|pyongyang|deploy|control|fire|return|strike[0-5]|defend[0-2])$/)"
               },
               "city": {
-                ".validate": "newData.isString() && newData.val().matches(/^(legacy|seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason)$/)"
+                ".validate": "newData.isString() && newData.val().matches(/^(legacy|seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason|beijing|shanghai|guangzhou|shenzhen|xian|chengdu|chongqing|wuhan|tokyo|osaka|kyoto|nagoya|sapporo|sendai|hiroshima|fukuoka)$/)"
               },
               "drone": {
                 ".validate": "newData.hasChildren(['forward','strafe','lift','yaw','pitch'])",
@@ -358,7 +364,7 @@
         "claims": {
           "$vehicle": {
             ".write": "auth != null && ((!newData.exists() && data.val() === auth.uid) || (newData.val() === auth.uid && (!data.exists() || data.val() === auth.uid) && (root.child('nightfallRooms').child($room).child('slots/0').val() === auth.uid || root.child('nightfallRooms').child($room).child('slots/1').val() === auth.uid || root.child('nightfallRooms').child($room).child('slots/2').val() === auth.uid || root.child('nightfallRooms').child($room).child('slots/3').val() === auth.uid)))",
-            ".validate": "$vehicle.matches(/^(([1-4][0-9]{2}|50[0-9]|51[01]|[1-9]?[0-9])|(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason)_([1-4][0-9]{2}|50[0-9]|51[01]|[1-9]?[0-9]))$/) && newData.isString()"
+            ".validate": "$vehicle.matches(/^((0|[1-9][0-9]{0,2}|10[01][0-9]|102[0-3])|(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason|beijing|shanghai|guangzhou|shenzhen|xian|chengdu|chongqing|wuhan|tokyo|osaka|kyoto|nagoya|sapporo|sendai|hiroshima|fukuoka)_(0|[1-9][0-9]{0,2}|10[01][0-9]|102[0-3]))$/) && newData.isString()"
           }
         },
         "damage": {
@@ -371,7 +377,7 @@
           ".write": "auth != null && root.child('nightfallRooms').child($room).child('meta/host').val() === auth.uid",
           ".validate": "newData.hasChildren(['version','t','active','vehicles','chief','dawn','updatedAt'])",
           "version": {
-            ".validate": "newData.val() === 32"
+            ".validate": "newData.val() === 33"
           },
           "t": {
             ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000000"
@@ -400,7 +406,7 @@
           "vehicles": {
             ".validate": "newData.hasChildren()",
             "$row": {
-              ".validate": "$row.matches(/^([1-4][0-9]{2}|50[0-9]|51[01]|[1-9]?[0-9])$/) && newData.hasChildren(['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17'])",
+              ".validate": "$row.matches(/^(0|[1-9][0-9]{0,2}|10[01][0-9]|102[0-3])$/) && newData.hasChildren(['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17'])",
               "$n": {
                 ".validate": "$n.matches(/^([0-9]|1[0-7])$/) && (newData.isNumber() && newData.val() >= -1000000000 && newData.val() <= 1000000000)"
               }
@@ -409,7 +415,7 @@
           "dead": {
             ".validate": "newData.hasChildren()",
             "$n": {
-              ".validate": "$n.matches(/^(0|[1-9][0-9]{0,3})$/) && (newData.isNumber() && newData.val() >= 0 && newData.val() <= 2047)"
+              ".validate": "$n.matches(/^(0|[1-9][0-9]{0,3})$/) && (newData.isNumber() && newData.val() >= 0 && newData.val() <= 4095)"
             }
           },
           "$other": {
@@ -496,7 +502,7 @@
                   ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
                 },
                 "city": {
-                  ".validate": "newData.isString() && newData.val().matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason)$/)"
+                  ".validate": "newData.isString() && newData.val().matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason|beijing|shanghai|guangzhou|shenzhen|xian|chengdu|chongqing|wuhan|tokyo|osaka|kyoto|nagoya|sapporo|sendai|hiroshima|fukuoka)$/)"
                 },
                 "serial": {
                   ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000000"
@@ -514,7 +520,7 @@
             },
             "gates": {
               "$row": {
-                ".validate": "$row.matches(/^([0-9]|1[0-9]|2[0-2])$/) && newData.isString() && newData.val().matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason)$/)"
+                ".validate": "$row.matches(/^([0-9]|1[0-9]|2[0-2])$/) && newData.isString() && newData.val().matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason|beijing|shanghai|guangzhou|shenzhen|xian|chengdu|chongqing|wuhan|tokyo|osaka|kyoto|nagoya|sapporo|sendai|hiroshima|fukuoka)$/)"
               }
             },
             "$other": {
@@ -522,16 +528,16 @@
             }
           },
           "cityId": {
-            ".validate": "newData.isString() && newData.val().matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason)$/)"
+            ".validate": "newData.isString() && newData.val().matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason|beijing|shanghai|guangzhou|shenzhen|xian|chengdu|chongqing|wuhan|tokyo|osaka|kyoto|nagoya|sapporo|sendai|hiroshima|fukuoka)$/)"
           },
           "mapMode": {
             ".validate": "newData.val() === 'cities'"
           },
           "regions": {
             "$city": {
-              ".validate": "$city.matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason)$/) && newData.hasChildren(['t','active','vehicles','chief','dawn','cityId']) && newData.child('cityId').val() === $city",
+              ".validate": "$city.matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason|beijing|shanghai|guangzhou|shenzhen|xian|chengdu|chongqing|wuhan|tokyo|osaka|kyoto|nagoya|sapporo|sendai|hiroshima|fukuoka)$/) && newData.hasChildren(['t','active','vehicles','chief','dawn','cityId']) && newData.child('cityId').val() === $city",
               "version": {
-                ".validate": "newData.val() === 32"
+                ".validate": "newData.val() === 33"
               },
               "t": {
                 ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000000"
@@ -560,7 +566,7 @@
               "vehicles": {
                 ".validate": "newData.hasChildren()",
                 "$row": {
-                  ".validate": "$row.matches(/^([1-4][0-9]{2}|50[0-9]|51[01]|[1-9]?[0-9])$/) && newData.hasChildren(['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17'])",
+                  ".validate": "$row.matches(/^(0|[1-9][0-9]{0,2}|10[01][0-9]|102[0-3])$/) && newData.hasChildren(['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17'])",
                   "$n": {
                     ".validate": "$n.matches(/^([0-9]|1[0-7])$/) && (newData.isNumber() && newData.val() >= -1000000000 && newData.val() <= 1000000000)"
                   }
@@ -569,7 +575,7 @@
               "dead": {
                 ".validate": "newData.hasChildren()",
                 "$n": {
-                  ".validate": "$n.matches(/^(0|[1-9][0-9]{0,3})$/) && (newData.isNumber() && newData.val() >= 0 && newData.val() <= 2047)"
+                  ".validate": "$n.matches(/^(0|[1-9][0-9]{0,3})$/) && (newData.isNumber() && newData.val() >= 0 && newData.val() <= 4095)"
                 }
               },
               "$other": {
@@ -629,7 +635,7 @@
                       ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
                     },
                     "city": {
-                      ".validate": "newData.isString() && newData.val().matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason)$/)"
+                      ".validate": "newData.isString() && newData.val().matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason|beijing|shanghai|guangzhou|shenzhen|xian|chengdu|chongqing|wuhan|tokyo|osaka|kyoto|nagoya|sapporo|sendai|hiroshima|fukuoka)$/)"
                     },
                     "serial": {
                       ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000000"
@@ -647,7 +653,7 @@
                 },
                 "gates": {
                   "$row": {
-                    ".validate": "$row.matches(/^([0-9]|1[0-9]|2[0-2])$/) && newData.isString() && newData.val().matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason)$/)"
+                    ".validate": "$row.matches(/^([0-9]|1[0-9]|2[0-2])$/) && newData.isString() && newData.val().matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason|beijing|shanghai|guangzhou|shenzhen|xian|chengdu|chongqing|wuhan|tokyo|osaka|kyoto|nagoya|sapporo|sendai|hiroshima|fukuoka)$/)"
                   }
                 },
                 "$other": {
@@ -655,7 +661,7 @@
                 }
               },
               "cityId": {
-                ".validate": "newData.isString() && newData.val().matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason)$/)"
+                ".validate": "newData.isString() && newData.val().matches(/^(seoul|incheon|suwon|cheongju|gunsan|gwangju|jeonju|naju|jeju|busan|ulsan|changwon|dokdo|ulleung|chuncheon|yangyang|sokcho|kaesong|sinuiju|pyongyang|hamhung|wonsan|rason|beijing|shanghai|guangzhou|shenzhen|xian|chengdu|chongqing|wuhan|tokyo|osaka|kyoto|nagoya|sapporo|sendai|hiroshima|fukuoka)$/)"
               },
               "mapMode": {
                 ".validate": "newData.val() === 'cities'"
@@ -671,7 +677,7 @@
               "$uid": {
                 ".validate": "(root.child('nightfallRooms').child($room).child('slots/0').val() === $uid || root.child('nightfallRooms').child($room).child('slots/1').val() === $uid || root.child('nightfallRooms').child($room).child('slots/2').val() === $uid || root.child('nightfallRooms').child($room).child('slots/3').val() === $uid) && newData.hasChildren(['0','1','2','3','4','5','6','7','8','9','10','11'])",
                 "$n": {
-                  ".validate": "newData.isNumber() && (($n === '0' && newData.val() >= -40000 && newData.val() <= 40000) || ($n === '1' && newData.val() >= -30 && newData.val() <= 600) || ($n === '2' && newData.val() >= -40000 && newData.val() <= 40000) || ($n === '3' && newData.val() >= -1000000 && newData.val() <= 1000000) || ($n === '4' && newData.val() >= -1.2 && newData.val() <= 1.2) || ($n === '5' && newData.val() >= 0 && newData.val() <= 90) || ($n === '6' && newData.val() >= 0 && newData.val() <= 4) || ($n === '7' && newData.val() >= 0 && newData.val() <= 80) || ($n === '8' && newData.val() >= 0 && newData.val() <= 2) || ($n === '9' && newData.val() >= 0 && newData.val() <= 1.4) || ($n === '10' && newData.val() >= 0 && newData.val() <= 45) || ($n === '11' && newData.val() >= 0 && newData.val() <= 610))"
+                  ".validate": "newData.isNumber() && (($n === '0' && newData.val() >= -180000 && newData.val() <= 180000) || ($n === '1' && newData.val() >= -30 && newData.val() <= 600) || ($n === '2' && newData.val() >= -180000 && newData.val() <= 180000) || ($n === '3' && newData.val() >= -1000000 && newData.val() <= 1000000) || ($n === '4' && newData.val() >= -1.2 && newData.val() <= 1.2) || ($n === '5' && newData.val() >= 0 && newData.val() <= 90) || ($n === '6' && newData.val() >= 0 && newData.val() <= 4) || ($n === '7' && newData.val() >= 0 && newData.val() <= 80) || ($n === '8' && newData.val() >= 0 && newData.val() <= 2) || ($n === '9' && newData.val() >= 0 && newData.val() <= 1.4) || ($n === '10' && newData.val() >= 0 && newData.val() <= 45) || ($n === '11' && newData.val() >= 0 && newData.val() <= 610))"
                 }
               }
             },

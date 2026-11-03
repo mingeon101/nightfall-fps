@@ -1,5 +1,6 @@
-import {EXPANDED_LIMIT,expandedCityAt} from './seoul-expansion-data.mjs?v=32';
-import {areaAt,AIRPORTS} from './atlas-data.mjs?v=32';
+import {isGameLand} from './geographic-terrain.mjs?v=33';
+import {EXPANDED_LIMIT,expandedCityAt} from './seoul-expansion-data.mjs?v=33';
+import {areaAt,AIRPORTS} from './atlas-data.mjs?v=33';
 // Pure simulation rules shared by the game and its regression checks.
 export const LIMIT=EXPANDED_LIMIT;
 export const DISTRICTS=[
@@ -36,7 +37,8 @@ export function groundHeight(x,z){return Math.max(0,...HILLS.map(h=>Math.max(0,1
 export function districtAt(x,z){if(Math.abs(x)>3400||Math.abs(z)>3400)return expandedCityAt(x,z).name+' · 서울 상세맵 확장 구역';const airport=AIRPORTS.find(a=>Math.hypot(x-a.x,z-a.z)<230);if(airport)return airport.name;if(Math.abs(z)<42)return '한강 · '+(BRIDGES.find(b=>Math.abs(x-b.x)<12)?.name||'수변');const h=HILLS.find(h=>Math.hypot(x-h.x,z-h.z)<h.radius);if(h)return h.name;return areaAt(x,z)?.name||'수도권 외곽 · 생성 구역'}
 const indices=new WeakMap();
 function nearbyBlocks(blocks,minX,maxX,minZ,maxZ){let index=indices.get(blocks);if(!index||index.length!==blocks.length){index={length:blocks.length,cells:new Map()};for(const b of blocks)for(let x=Math.floor((b.x-b.w)/100);x<=Math.floor((b.x+b.w)/100);x++)for(let z=Math.floor((b.z-b.d)/100);z<=Math.floor((b.z+b.d)/100);z++){const key=x+','+z;if(!index.cells.has(key))index.cells.set(key,[]);index.cells.get(key).push(b)}indices.set(blocks,index)}const found=new Set();for(let x=Math.floor(minX/100);x<=Math.floor(maxX/100);x++)for(let z=Math.floor(minZ/100);z<=Math.floor(maxZ/100);z++)for(const b of index.cells.get(x+','+z)||[])found.add(b);return found}
-export function blockedAt(x,z,r,blocks,y=0,height=1.8){if(Math.abs(x)>LIMIT-r||Math.abs(z)>LIMIT-r)return true;for(const b of nearbyBlocks(blocks,x-r,x+r,z-r,z+r))if(Math.abs(x-b.x)<b.w+r&&Math.abs(z-b.z)<b.d+r&&y<b.top&&y+height>b.bottom)return true;return false}
+export function collisionCandidates(blocks,a,b){return nearbyBlocks(blocks,Math.min(a.x,b.x),Math.max(a.x,b.x),Math.min(a.z,b.z),Math.max(a.z,b.z))}
+export function blockedAt(x,z,r,blocks,y=0,height=1.8){if(!isGameLand(x,z))return true;if(Math.abs(x)>LIMIT-r||Math.abs(z)>LIMIT-r)return true;for(const b of nearbyBlocks(blocks,x-r,x+r,z-r,z+r))if(Math.abs(x-b.x)<b.w+r&&Math.abs(z-b.z)<b.d+r&&y<b.top&&y+height>b.bottom)return true;return false}
 export function moveBody(pos,dx,dz,blocks,r=.4,y=0,height=1.8){
  const steps=Math.max(1,Math.ceil(Math.hypot(dx,dz)/.45));let collided=false;
  for(let i=0;i<steps;i++){

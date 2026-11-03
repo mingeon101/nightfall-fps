@@ -1,4 +1,4 @@
-import {BRIDGES} from './core.mjs?v=32';
+import {BRIDGES} from './core.mjs?v=33';
 const nearest=(v,axes)=>axes.reduce((a,b)=>Math.abs(a-v)<=Math.abs(b-v)?a:b);
 export function taxiAxes(city){return {xs:(city.id==='seoul'?BRIDGES.map(b=>b.x):[-1800,-1200,-600,0,600,1200,1800]).map(v=>v+city.x),zs:(city.id==='seoul'?[-2400,-1800,-1200,-600,-340,-240,-140,140,240,340,600,1200,1800,2400]:[-1800,-1200,-600,0,600,1200,1800]).map(v=>v+city.z)}}
 export function taxiCurb(p,city){const {xs,zs}=taxiAxes(city),x=nearest(p.x,xs),z=nearest(p.z,zs);return Math.abs(x-p.x)<Math.abs(z-p.z)?{x,z:p.z,axis:'x'}:{x:p.x,z,axis:'z'}}

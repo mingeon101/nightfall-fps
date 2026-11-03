@@ -1,6 +1,6 @@
-import {SECURITY_HEALTH,SECURITY_MAGAZINE,SECURITY_POSTS,securityTarget} from './security-sim.mjs?v=32';
-import {groundHeight,moveBody,lineBlocked} from './core.mjs?v=32';
-import {segmentBox,freshCivic,registerCivilianDeath,advanceJustice,sanitizeCivic} from './civic-sim.mjs?v=32';
+import {SECURITY_HEALTH,SECURITY_MAGAZINE,SECURITY_POSTS,securityTarget} from './security-sim.mjs?v=33';
+import {groundHeight,moveBody,lineBlocked,collisionCandidates} from './core.mjs?v=33';
+import {segmentBox,freshCivic,registerCivilianDeath,advanceJustice,sanitizeCivic} from './civic-sim.mjs?v=33';
 export function buildCivic(T,scene,world,metropolis,api){
  const {blocks,m}=world,root=new T.Group();scene.add(root);let state=freshCivic(),arrestCooldown=0,roofReturn=null;const fires=new Map(),roofs=[],responders=[],officers=[],guards=[],prisoners=[];let fireClock=0,policeRespawn=0,securityAlarm=0,securityClock=0;const security=[];
  function box(w,h,d,x,y,z,mat=m.white,solid=false){const mesh=world.cube(w,h,d,x,y,z,mat,false,root);if(solid){const b={x,z,w:w/2,d:d/2,bottom:y-h/2,top:y+h/2,civic:true};blocks.push(b);mesh.userData.block=b}return mesh}
@@ -25,7 +25,7 @@ export function buildCivic(T,scene,world,metropolis,api){
  api.animate(g,dt,moving);
  }}
  function floorAt(p){if(p.x>40&&p.x<70&&p.z>-112&&p.z<-88&&p.y<0)return -12;let ground=groundHeight(p.x,p.z);for(const r of nearbyRoofs(p))if(Math.abs(p.x-r.x)<r.w&&Math.abs(p.z-r.z)<r.d&&p.y>=r.top-.35)ground=Math.max(ground,r.top);return ground}
- function firstHit(a,b){let best=null,t=1;for(const block of blocks){if(block.kind==='water'||block.top<1)continue;const at=segmentBox(a,b,block);if(at!==null&&at<t){t=at;best={block,point:{x:a.x+(b.x-a.x)*at,y:a.y+(b.y-a.y)*at,z:a.z+(b.z-a.z)*at}}}}return best}
+ function firstHit(a,b){let best=null,t=1;for(const block of collisionCandidates(blocks,a,b)){if(block.kind==='water'||block.top<1)continue;const at=segmentBox(a,b,block);if(at!==null&&at<t){t=at;best={block,point:{x:a.x+(b.x-a.x)*at,y:a.y+(b.y-a.y)*at,z:a.z+(b.z-a.z)*at}}}}return best}
  function ignite(hit,amount){if(!hit)return;const b=hit.block;if(b.top<3)return;let f=fires.get(b);if(!f){if(fires.size>=16)return;const flame=new T.Mesh(new T.ConeGeometry(1.8,5,7),new T.MeshBasicMaterial({color:0xff7a27,transparent:true,opacity:.8}));flame.position.set(hit.point.x,Math.max(.6,hit.point.y),hit.point.z);scene.add(flame);f={b,flame,heat:0,time:0,out:false};fires.set(b,f)}f.heat=Math.min(100,f.heat+amount*.6);f.out=false;f.flame.visible=f.heat>=30}
  function death(p){if(!p.role||p.role==='archivist')registerCivilianDeath(state);if(p.role==='guard'&&guards.filter(g=>g.hp<=0).length>=2){gate.visible=false;gate.userData.block.top=-100;api.message('교도소 출입문 잠금 해제 · 정문으로 탈출 가능',5)}}
  function arrest(){state.justice='station';state.justiceTime=0;api.disarm();api.warp({x:station.x,z:station.z,y:0});api.message('체포 · 경찰서 조사 중',6)}

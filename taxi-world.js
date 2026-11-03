@@ -1,5 +1,5 @@
-import {taxiCurb,taxiRoute,taxiFare} from './taxi-sim.mjs?v=32';
-import {blockedAt,moveBody} from './core.mjs?v=32';
+import {taxiCurb,taxiRoute,taxiFare} from './taxi-sim.mjs?v=33';
+import {blockedAt,moveBody} from './core.mjs?v=33';
 export function buildTaxi(T,scene,world,metropolis,api){const car=world.vehicle('car',0,0,0,false,3);world.vehicles.pop();car.root.visible=false;let state=null;
  function safeCurb(p,city){const curb=taxiCurb(p,city);for(const delta of [0,12,-12,24,-24,40,-40,70,-70]){const at={...curb,x:curb.x+(curb.axis==='z'?delta:0),z:curb.z+(curb.axis==='x'?delta:0)};if(!blockedAt(at.x,at.z,1.4,world.blocks))return at}return null}
  function cancel(refund=false){if(state?.phase==='riding'){api.exit(metropolis.safeSpawn({x:car.x+4,z:car.z+4}));if(refund)api.refund(state.fare)}state=null;car.root.visible=false}

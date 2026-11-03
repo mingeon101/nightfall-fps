@@ -1,6 +1,6 @@
-import {OFFENSIVE_START,OFFENSIVE_INFANTRY,OFFENSIVE_VEHICLES,BATTLE_FRONTS,INVASION_LANES,ADVANCE_Z,offensiveWave,offensiveSpawn,offensiveGoal,offensiveReport,sanitizeOffensiveReport} from './offensive-sim.mjs?v=32';
-import {moveBody,lineBlocked} from './core.mjs?v=32';
-export function buildMassOffensive(T,scene,world,metropolis,api){const {enemies,allies,hostileVehicles}=api,infantry=enemies.filter((p,id)=>id>=16&&!p.vehicle&&!p.role&&!p.assemblyGuard).slice(0,OFFENSIVE_INFANTRY),defenders=allies.slice(24,104);let announced=0,lastPhase=0,remote=null,report=null,reportAt=-1;
+import {OFFENSIVE_START,OFFENSIVE_INFANTRY,OFFENSIVE_VEHICLES,BATTLE_FRONTS,INVASION_LANES,ADVANCE_Z,offensiveWave,offensiveSpawn,offensiveGoal,offensiveReport,sanitizeOffensiveReport} from './offensive-sim.mjs?v=33';
+import {moveBody,lineBlocked} from './core.mjs?v=33';
+export function buildMassOffensive(T,scene,world,metropolis,api){const {enemies,allies,hostileVehicles}=api,infantry=enemies.filter((p,id)=>id>=16&&!p.vehicle&&!p.role&&!p.assemblyGuard&&!p.cityGarrison).slice(0,OFFENSIVE_INFANTRY),defenders=allies.slice(24,104);let announced=0,lastPhase=0,remote=null,report=null,reportAt=-1;
  // Append equipment: existing vehicle IDs (player vehicles and services) stay stable.
  for(let i=hostileVehicles.length;i<OFFENSIVE_VEHICLES;i++){const type=['tank','tank','helicopter','fighter'][i%4],v=world.vehicle(type,0,-3400,Math.PI);v.hostile=true;v.enemyPilot=enemies[288+i];v.enemyPilot.vehicle=v;v.root.userData.actor=v.enemyPilot;hostileVehicles.push(v)}
  const root=new T.Group();scene.add(root);function box(w,h,d,x,y,z,mat,solid=false){const mesh=world.cube(w,h,d,x,y,z,mat,false,root);if(solid)world.blocks.push({x,z,w:w/2,d:d/2,bottom:y-h/2,top:y+h/2,kind:'front-cover'});return mesh}

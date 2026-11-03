@@ -1,6 +1,6 @@
-import {cleanChat,CHAT_INTERVAL} from './chat-sim.mjs?v=32';
-import {latencyLabel} from './performance-metrics.mjs?v=32';
-import {ROOM_VERSION,roomCode,availableSlot,cleanPose,cleanShot,acceptShot} from './multiplayer-protocol.mjs?v=32';
+import {cleanChat,CHAT_INTERVAL} from './chat-sim.mjs?v=33';
+import {latencyLabel} from './performance-metrics.mjs?v=33';
+import {ROOM_VERSION,roomCode,availableSlot,cleanPose,cleanShot,acceptShot} from './multiplayer-protocol.mjs?v=33';
 export function installMultiplayer(bridge){
  const $=id=>document.getElementById(id);let session=null,busy=false,connected=false,connectionStop=null,ctx=null,clock=0,worldClock=0;
  const monotonic=()=>typeof performance!=='undefined'?performance.now():Date.now();
@@ -26,11 +26,12 @@ export function installMultiplayer(bridge){
  if(!s.writing&&(signature!==s.poseSignature||Date.now()-(s.poseAt||0)>=1000)){s.writing=true;const sent=Date.now(),began=monotonic();s.pingStarted=began;jobs.push(s.api.set(s.ref('players/'+s.uid),{...pose,name:ctx?.user?.isAnonymous?'익명 대원':String(ctx?.user?.displayName||'대원').slice(0,16),updatedAt:s.api.serverTimestamp()}).then(()=>{s.poseSignature=signature;s.poseAt=sent;s.pingMs=Math.max(0,monotonic()-began)}).catch(e=>{if(session===s)fail(e)}).finally(()=>{s.writing=false;s.pingStarted=null}))}
  if(!s.inputWriting&&s.shotQueue.length){s.inputWriting=true;const shots=s.shotQueue.splice(0);jobs.push(Promise.all(shots.map(shot=>s.api.set(s.ref('inputs/'+s.uid+'/'+(shot.seq%8)),shot))).catch(e=>{if(session===s)fail(e)}).finally(()=>{s.inputWriting=false}))}
  if(s.isHost&&++worldClock%5===0&&!s.worldWriting){s.worldWriting=true;const next={...bridge.snapshot(Object.values(s.peers)),version:ROOM_VERSION};const patch={updatedAt:s.api.serverTimestamp()};for(const key of Object.keys(s.lastWorld||{}))if(!(key in next))patch[key]=null;for(const [key,value]of Object.entries(next)){if(key==='vehicles'&&s.lastWorld){for(let i=0;i<Math.max(value.length,s.lastWorld.vehicles?.length||0);i++)if(JSON.stringify(value[i])!==JSON.stringify(s.lastWorld.vehicles?.[i]))patch['vehicles/'+i]=value[i]??null}else if(JSON.stringify(value)!==JSON.stringify(s.lastWorld?.[key]))patch[key]=value}jobs.push(s.api.update(s.ref('world'),patch).then(()=>{s.lastWorld=next}).catch(e=>{if(session===s)fail(e)}).finally(()=>{s.worldWriting=false}))}
+ if(s.isHost&&!s.damageWriting&&s.pendingDamage?.size){const ids=[...s.pendingDamage];s.pendingDamage.clear();const patch={};for(const uid of ids)if(s.peers[uid])patch[uid]=s.totalDamage[uid];if(Object.keys(patch).length){s.damageWriting=true;jobs.push(s.api.update(s.ref('damage'),patch).catch(e=>{if(session===s)fail(e)}).finally(()=>s.damageWriting=false))}}
  await Promise.all(jobs);
  }
 
  async function sendChat(text){const s=session,now=Date.now();if(!s||s.chatWriting||now-(s.chatAt||0)<CHAT_INTERVAL)return false;const seq=(s.chatSeq||0)+1,row=cleanChat({text,at:now,seq});if(!row)return false;s.chatWriting=true;try{await s.api.update(s.ref('chat/'+s.uid),{lastAt:s.api.serverTimestamp(),['messages/'+seq%4]:{text:row.text,seq,at:s.api.serverTimestamp()}});s.chatAt=now;s.chatSeq=seq;return true}catch(e){status('채팅 전송 실패 · 최신 규칙을 확인하세요.');return false}finally{s.chatWriting=false}}
- function damagePeer(uid,amount){const s=session;if(!s?.isHost||!s.peers[uid])return;s.totalDamage[uid]=(s.totalDamage[uid]||0)+Math.max(0,amount);s.api.set(s.ref('damage/'+uid),s.totalDamage[uid]).catch(fail)}
+ function damagePeer(uid,amount){const s=session;if(!s?.isHost||!s.peers[uid])return;s.totalDamage[uid]=(s.totalDamage[uid]||0)+Math.max(0,amount);(s.pendingDamage??=new Set()).add(uid)}
  function show(){bridge.pause();$('mppanel').hidden=false;render()}
  $('mpbutton').onclick=show;$('mpmenu').onclick=show;$('mpclose').onclick=()=>{$('mppanel').hidden=true;if(bridge.started())bridge.resume()};$('mpcreate').onclick=()=>join(true);$('mpjoin').onclick=()=>join(false);$('mpleave').onclick=()=>leave();$('mplogin').onclick=()=>{$('mppanel').hidden=true;document.getElementById('profilebutton').click()};window.addEventListener('nightfall-auth',authChanged);authChanged();setInterval(tick,100);const controller={get session(){return session},get ping(){return session?latencyLabel(session.pingMs,session.pingStarted,monotonic()):'—'},leave,claim,release,shoot,sendChat,damagePeer};window.nightfallMultiplayer=controller;return controller;
 }
